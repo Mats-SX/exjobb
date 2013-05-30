@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "list.h"
 #include "zeta_transform.h"
 
 int main(int argc, char** argv) {
@@ -7,7 +8,7 @@ int main(int argc, char** argv) {
 
 	int n, m;
 	fscanf(input, "%d%d\n", &m, &n);
-
+	printf("%d %d\n", m, n);
 	list_t* data_structure = parse(input, n, m);
 
 	printf("%d\n", data_structure->data);
@@ -18,40 +19,24 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-void* getFirst(list_t* list) {
-	return list->data;
-}
-
-
 list_t* parse(FILE* input, int n, int m) {
-	list_t* list = new_list(NULL);
+	int val;
+	fscanf(input, "%d", val);
+	list_t* subset = new_list(NULL);
 	for (int i = 0; i < m; ++i) {
-		int val;
-		val = getc(input);
-		printf("%d\n", val);
-		list->data = val;
+		insert_first(subset, parse_line(input));
 	}
+	insert_first(subset, val);
 	return list;
 }
 
-list_t* new_list(void* data) {
-	list_t*	list;
-	list = malloc(sizeof(list_t));
-	list->data = data;
-	list->next = NULL;
-}
-
-void insert(list_t* list, void* data) {
-	return;
-}
-
-void free_list(list_t* list) {
-	if (list->next == NULL) {
-		free(list);
-		return;
-	} else {
-		free_list(list->next);
-		free(list);
+list_t* parse_line(FILE* input) {
+	int val = getc(input);
+	list_t* subset = new_list(val);
+	printf("%d", val);
+	while (val == '#' || val == EOF) {
+		insert_first(subset, val);
+		val = getc(input);
 	}
-	return;
+	return subset;
 }
