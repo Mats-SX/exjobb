@@ -1,19 +1,18 @@
 
 # le debug options
-DEBUG = false
+DEBUG = true
 
 # le flags >_<
 CXX		= gcc
 CPPFLAGS	= -std=gnu99
-#CXXFLAGS	= -std=gnu99
-#CC		= gcc
+CC		= gcc
 
-#ifeq ($(DEBUG), true)
-#CXXFLAGS += -ggdb
-#LDFLAGS += -ggdb
-#else
-#CXXFLAGS += -O2
-#endif
+ifeq ($(DEBUG), true)
+CPPFLAGS += -ggdb
+LDFLAGS += -ggdb
+else
+CPPFLAGS += -O2
+endif
 
 # Paths
 HOME		= .

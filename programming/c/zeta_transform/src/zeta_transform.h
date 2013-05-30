@@ -18,4 +18,8 @@ list_t* parse(FILE*, int, int);
 
 list_t* new_list(void*);
 
+void free_list(list_t*);
+
+void* getFirst(list_t*);
+
 #endif
