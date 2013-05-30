@@ -45,7 +45,7 @@ cleanest: cleaner
 	$(RM) $(BIN)*
 
 # Linking
-zeta_transform: zeta_transform.o
+zeta_transform: zeta_transform.o list.o
 
 include $(DFILES)
 
