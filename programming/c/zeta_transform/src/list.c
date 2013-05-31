@@ -6,15 +6,21 @@ void* getFirst(list_t* list) {
 	return list->data;
 }
 
-list_t* new_list(void* data) {
-	list_t*	list;
-	list = malloc(sizeof(list_t));
-	list->data = data;
+list_t* new_list(void* head) {
+	list_t*	list = malloc(sizeof(list_t));
+	list->data = head;
 	list->next = NULL;
+	return list;
 }
 
 void insert(list_t* list, void* data) {
 	return;
+}
+
+void destroy_lists(list_t** lists, int nbr_of_lists) {
+	for (int i = 0; i < nbr_of_lists; ++i) {
+		free_list(lists[i]);
+	}
 }
 
 void free_list(list_t* list) {
@@ -30,5 +36,6 @@ void free_list(list_t* list) {
 
 void insert_first(list_t* list, void* data) {
 	list_t* l = new_list(data);
-	l->next = list;
+	l->next = list->next;
+	list->next = l;
 }

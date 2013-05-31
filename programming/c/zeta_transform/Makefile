@@ -22,7 +22,7 @@ BIN		= $(HOME)/bin/
 
 # Programs
 PRGS		= zeta_transform
-OBJS		= $(addsuffix .o, $(PRGS))
+OBJS		= zeta_transform.o list.o parsing.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
@@ -45,7 +45,7 @@ cleanest: cleaner
 	$(RM) $(BIN)*
 
 # Linking
-zeta_transform: zeta_transform.o list.o
+zeta_transform: zeta_transform.o list.o parsing.o
 
 include $(DFILES)
 
