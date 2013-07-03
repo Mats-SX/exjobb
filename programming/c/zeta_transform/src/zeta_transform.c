@@ -10,15 +10,22 @@ int main(int argc, char** argv) {
 	int n = 0;
 	int m = 0;
 	fscanf(input, "%d%d\n", &n, &m);
-	printf("m: %d n: %d\n", m, n);
+//	printf("m: %d n: %d\n", m, n);
 
-	list_t** data_structure = (list_t**) calloc(m, sizeof(list_t*));
+	list_t** data_structure =
+			(list_t**) calloc(m, sizeof(list_t*));
 	parse(input, data_structure, m);
 
-	printf("first element?: %d\n", data_structure[0]->data);
-	printf("%s + %s\n", argv[0], argv[1]);
-	printf("Hello world!\n");
-	destroy_lists(data_structure, m);
+	// No more input needed
 	fclose(input);
+
+	/* This is where the magic happens */
+
+	
+
+	/* End of magic */
+
+	// Clean up on the heap
+	destroy_lists(data_structure, m);
 	return 0;
 }
