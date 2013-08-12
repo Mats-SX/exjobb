@@ -1,0 +1,52 @@
+\documentclass[a4paper, titlepage]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{times}
+\newcommand{\citeo}[1]{\raisebox{4pt}{\footnotesize{\cite{#1}}}} % enables raised cites oxford style using \citeo{nametobibitem}
+
+
+\title{\huge{title of exjob}}
+
+\author{Mats Rydberg}
+\date{\today}
+\begin{document}
+
+\maketitle
+
+\section*{Problem description}
+The main goal of this Master's Thesis is to implement the algorithm formulated and published in \cite{covering}. To the knowledge of the authors of that paper, no such complete implementation exists, and as such this project's results will provide the ability for the algorithm to be tested in practice.
+
+About half of the work will be assigned into developing the program which will run the algorithm. Since most algorithmic problems come in several well-known versions, such as decision, optimisation and counting, some effort will be put down to make the program able to solve more than one specific problem version. It is estimated that the pure programming parts of the project will not be trivial, as the program must be able to handle ''large'' numbers and ''large'' data structures. With ''large'', the problem in programming terms is basically some kind of arbitrary-precision integral data type, where its application and its performance is in focus. 
+
+The first version of the program will be written in C/C++ as a reference implementation. After this is done, an evaluation of the project status should determine if supplementary implementations in other programming languages and/or techniques, such as Python (scripting), Java (object-orientation), Haskell (functional) or MiniZink (constraint), fit in the project time-frame. Such implementations could provide useful and interesting information as comparison between languages, compilers and programming techniques.
+
+The other half of the practical work will include putting the program to test. This includes (apart from stability and correctness of course) performance on a number of different classes of problem instances, such as randomized graphs, dense graphs or tree-graphs. Input or queue-sorting orders (if there are internal queues) could also be interesting variations to measure.
+
+Stakeholders for the final results of this Master's Thesis are researchers in the field of Algorithms and Data Structures.
+
+\section*{Contact info}
+Below can be found the requested personal information of the author of this application and the Master's Thesis.
+\\
+
+\begin{tabular}{c|c|c|c|c}
+Name & Soc.sec. nbr & LTH alias & Tel. nbr & Email \\ \hline
+Mats Rydberg & 880623-8518 & dt08mr7 & 076-9226257 & Mats.SXz@gmail.com \\
+\end{tabular}
+\\ \\ \\ 
+The task idea was invented by:
+\\
+
+\begin{tabular}{c|c|c}
+Name & Tel. nbr & Email \\ \hline
+Thore Husfeldt & 046-2224934  & Thore.Husfeldt@cs.lth.se \\
+\end{tabular}
+
+\begin{thebibliography}{99}
+\bibitem{covering} Björklund, A., Husfeldt, T., Kaski, P., Koivisto, M.: Covering and Packing in Linear Space. In \emph{Automata, Languages and Programming, 37th International Colloquium, ICALP 2010 (Bordeaux, France, July 6–10)}, number 6198 in Lecture Notes in Computer Science, pages 727–737. Springer, 2010.
+\end{thebibliography}
+
+\end{document}
