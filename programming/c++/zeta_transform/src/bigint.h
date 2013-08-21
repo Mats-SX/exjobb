@@ -7,6 +7,12 @@ class BigInt {
 	friend std::ostream& operator<<(std::ostream&, const BigInt&);
 	public:
 	int value;
+	BigInt();
+	BigInt(int);
+	BigInt(long);
+	BigInt(long long);
+
+	void add_two_power_of(int);
 };
 
 #endif
