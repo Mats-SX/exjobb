@@ -20,8 +20,8 @@ BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= zeta_transform
-OBJS		= zeta_transform.o subset.o bigint.o
+PRGS		= zeta_transform fast_zeta_transform
+OBJS		= zeta_transform.o fast_zeta_transform.o subset.o bigint.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
@@ -45,6 +45,7 @@ cleanest: cleaner
 
 # Linking
 zeta_transform: zeta_transform.o subset.o bigint.o
+fast_zeta_transform: fast_zeta_transform.o subset.o bigint.o
 
 include $(DFILES)
 
