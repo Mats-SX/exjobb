@@ -77,7 +77,7 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 		// x1 is index of X1, but we do not handle X1 explicitly.
 		
 		//DEBUG
-		cout << "x1: " << x1 << " = " << bitset<7>(x1) << endl;
+		//cout << "x1: " << x1 << " = " << bitset<7>(x1) << endl;
 
 
 		// {{ For each Y2 in U2, set g(Y2) <- 0 }}
@@ -93,7 +93,7 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 			int y = (*family)[i];
 
 			//DEBUG
-			cout << "y: " << y << " = " << bitset<7>(y) << endl;
+			//cout << "y: " << y << " = " << bitset<7>(y) << endl;
 
 			// {{ if YnU1 is a subset of X1 }}
 			// with index math: since u1 is all-ones,
@@ -110,7 +110,7 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 				//     << ", u1: " << u1 << " = " << bitset<7>(u1)
 				  //   << ", x1: " << x1 << " = " << bitset<7>(x1)
 				    // << endl;
-				cout << "y & u1 was subset of x1?" << endl;
+				//cout << "y & u1 was subset of x1?" << endl;
 
 
 				// Since g contains all subsets of U2 in increasing
@@ -120,21 +120,24 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 				// g doesn't contain "holes", we normalize the distances
 				// to 1 like this.
 				
+				//DEBUG
 				//cout << "This is y & u2: " << (y & u2) << endl;
-				cout << endl;
+				/*cout << endl;
 				cout << "y & u2: " << (y & u2) << " = " << bitset<7>(y & u2) << endl;
 				cout << "(y&u2)/2^n1: " << ((y & u2) / two_to_the_n1) << " = "
 					<< bitset<7>(((y & u2) / two_to_the_n1)) << endl;
 				cout << "f(" << i << ") = " << (*f)[i] << endl;
+				*/
+
 				g[(y & u2) / two_to_the_n1] += (*f)[i];
 			}
 		}
 		
 		// DEBUG
-		cout << "\nThese are the values g(Y2) where Y2 are all subsets of U2:" << endl;
+		/*cout << "\nThese are the values g(Y2) where Y2 are all subsets of U2:" << endl;
 		for (int i = 0; i < two_to_the_n2; ++i) {
 			cout << "g(" << bitset<7>(i * two_to_the_n1) << "): " << g[i] << endl;
-		}
+		}*/
 
 		// For testing purposes, I safe-copy g here. 
 		// Should be removed when we go live.
@@ -150,12 +153,14 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 		// by 2^n1 positions.
 		// {{ For each subset X2 of U2, output h(X2) as the value fS(X1uX2) }}
 	
-		cout << endl;
+		
 		for (int i = 0; i < two_to_the_n2; ++i) {
 			int x2 = i * two_to_the_n1;
 
-			// DEBUG
-			cout << "gS(" << bitset<7>((*family)[i]) << "): " << g[i] << endl;
+			
+			cout << "fS(" << bitset<7>(x1 | x2) 
+				<< " = " << (x1 | x2) 
+				<< "): " << g[i] << endl;
 
 
 			//(*f)[i] = g[i]; // WRONG NORMALIZATION!!
