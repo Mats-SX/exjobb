@@ -67,12 +67,19 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 	// Function g
 	vector<int> g(two_to_the_n2);
 
+	// DEBUG
+	cout << "NOW STARTING THE MAIN LOOP" << endl << endl;
+
 	// Thanks to our constraint on the ordering of F, we can know for sure
 	// that the subsets X1 of U1 are the first 2^n1 subsets in F
 	// {{ For each subset X1 of U1, do }}
 	for (int x1 = 0; x1 < two_to_the_n1; ++x1) {
 		// x1 is index of X1, but we do not handle X1 explicitly.
 		
+		//DEBUG
+		cout << "x1: " << x1 << " = " << bitset<7>(x1) << endl;
+
+
 		// {{ For each Y2 in U2, set g(Y2) <- 0 }}
 		for (int i = 0; i < two_to_the_n2; ++i) {
 			g[i] = 0;	// We just initialize a 0-vector of size 2^n2.
@@ -84,6 +91,10 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 		// {{ For each Y in F, if YnU1 is a subset of X1, then set g(YnU2) <- g(YnU2) + f(Y) }}
 		for (int i = 0; i < family->size(); ++i) {
 			int y = (*family)[i];
+
+			//DEBUG
+			cout << "y: " << y << " = " << bitset<7>(y) << endl;
+
 			// {{ if YnU1 is a subset of X1 }}
 			// with index math: since u1 is all-ones,
 			// y & u1 will be the index of the set YnU1.
@@ -93,19 +104,41 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 			// If y & u1 does contain a 1 in a position where X1
 			// doesn't, (y & u1) | x1 will be a larger number than x1.
 			if (((y & u1) | x1) <= x1) {
+				
+				// DEBUG
+				//cout << "y: " << y << " = " << bitset<7>(y)
+				//     << ", u1: " << u1 << " = " << bitset<7>(u1)
+				  //   << ", x1: " << x1 << " = " << bitset<7>(x1)
+				    // << endl;
+				cout << "y & u1 was subset of x1?" << endl;
+
+
 				// Since g contains all subsets of U2 in increasing
 				// order of index, but indices of subsets of U2 doesn't
 				// (generally) come at a distance of 1 from eachother, 
 				// they come at a distance of 2^n1 (=1 iff n1=0). Since
 				// g doesn't contain "holes", we normalize the distances
 				// to 1 like this.
+				
+				//cout << "This is y & u2: " << (y & u2) << endl;
+				cout << endl;
+				cout << "y & u2: " << (y & u2) << " = " << bitset<7>(y & u2) << endl;
+				cout << "(y&u2)/2^n1: " << ((y & u2) / two_to_the_n1) << " = "
+					<< bitset<7>(((y & u2) / two_to_the_n1)) << endl;
+				cout << "f(" << i << ") = " << (*f)[i] << endl;
 				g[(y & u2) / two_to_the_n1] += (*f)[i];
 			}
 		}
 		
+		// DEBUG
+		cout << "\nThese are the values g(Y2) where Y2 are all subsets of U2:" << endl;
+		for (int i = 0; i < two_to_the_n2; ++i) {
+			cout << "g(" << bitset<7>(i * two_to_the_n1) << "): " << g[i] << endl;
+		}
+
 		// For testing purposes, I safe-copy g here. 
 		// Should be removed when we go live.
-		vector<int> safe_copy(g);
+//		vector<int> safe_copy(g);
 
 		// I don't need another vector, so I re-use g as h.
 		// {{ Compute h <- gS using fast zeta transform on 2^U2 }}
@@ -116,9 +149,16 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 		// a distance of 1 from eachother, unlike with U1. They are separarated 
 		// by 2^n1 positions.
 		// {{ For each subset X2 of U2, output h(X2) as the value fS(X1uX2) }}
+	
+		cout << endl;
 		for (int i = 0; i < two_to_the_n2; ++i) {
 			int x2 = i * two_to_the_n1;
-			(*f)[i] = g[i]; // WRONG NORMALIZATION!!
+
+			// DEBUG
+			cout << "gS(" << bitset<7>((*family)[i]) << "): " << g[i] << endl;
+
+
+			//(*f)[i] = g[i]; // WRONG NORMALIZATION!!
 		}
 	}
 
@@ -153,20 +193,22 @@ int main(int argc, char** argv) {
 	}
 
 
-	/*
-	 * Input validation
+	
+	// Input validation
+	cout << "n: " << n << ", m: " << m << endl;
 	for (int i = 0; i < f.size(); ++i) {
-		cout << "fS(" << i << "): " << f[i] << endl;
+		cout << "f(" << bitset<7>(family[i]) << "): " << f[i] << endl;
 	}
-	*/
+	
 	
 	fast_zeta_transform_linear_space(n, &family, &f);
 	//fast_zeta_transform_exp_space(n, &f);
 
 	
 //	Transformed output
+	/*
 	for (int i = 0; i < f.size(); ++i) {
-		cout << "fS(" << bitset<6>(i) << "): " << f[i] << endl;
+		cout << "fS(" << bitset<7>(i) << "): " << f[i] << endl;
 	}
-	
+	*/
 }
