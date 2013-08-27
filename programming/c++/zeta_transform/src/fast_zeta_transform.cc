@@ -158,7 +158,7 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 			int x2 = i * two_to_the_n1;
 
 			
-			cout << "fS(" << bitset<7>(x1 | x2) 
+			cout << "fS(" << bitset<30>(x1 | x2) 
 				<< " = " << (x1 | x2) 
 				<< "): " << g[i] << endl;
 
@@ -173,6 +173,11 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 
 
 int main(int argc, char** argv) {
+
+	if (argc != 2) {
+		cout << "Supply exactly 1 argument, which is the infile." << endl;
+		return 1;
+	}
 
 	ifstream infile(argv[1]);
 	int n, m;
@@ -200,11 +205,12 @@ int main(int argc, char** argv) {
 
 	
 	// Input validation
+	/*
 	cout << "n: " << n << ", m: " << m << endl;
 	for (int i = 0; i < f.size(); ++i) {
-		cout << "f(" << bitset<7>(family[i]) << "): " << f[i] << endl;
+		cout << "f(" << bitset<30>(family[i]) << "): " << f[i] << endl;
 	}
-	
+	*/
 	
 	fast_zeta_transform_linear_space(n, &family, &f);
 	//fast_zeta_transform_exp_space(n, &f);
