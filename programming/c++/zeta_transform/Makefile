@@ -1,6 +1,6 @@
 
 # le debug options
-DEBUG = true
+DEBUG = false
 
 # le flags >_<
 CXX		= g++
@@ -20,14 +20,14 @@ BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= zeta_transform fast_zeta_transform
-OBJS		= zeta_transform.o fast_zeta_transform.o subset.o bigint.o
+PRGS		= zeta_transform fast_zeta_transform instance_creator
+OBJS		= instance_creator.o zeta_transform.o fast_zeta_transform.o subset.o bigint.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
 .PHONY: all install clean
 
-firsttarget: install clean
+firsttarget: install
 
 all: $(PRGS)
 
@@ -46,6 +46,7 @@ cleanest: cleaner
 # Linking
 zeta_transform: zeta_transform.o subset.o bigint.o
 fast_zeta_transform: fast_zeta_transform.o subset.o bigint.o
+instance_creator: instance_creator.o
 
 include $(DFILES)
 

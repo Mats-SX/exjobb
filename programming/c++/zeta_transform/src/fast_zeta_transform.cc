@@ -42,6 +42,32 @@ void pick_n2(int* n1, int* n2, int f_size, int n, int split_decision) {
 
 }
 
+// Shameful copy-paste from stackoverflow.com: http://stackoverflow.com/questions/4244274/how-do-i-count-the-number-of-zero-bits-in-an-integer
+// This counts the number of 1-bits in a 32-bit integer.
+int count_1bits(int i) {
+	i = i - ((i >> 1) & 0x55555555);
+	i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+	return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
+}
+
+/*
+	    x = x - ((x >> 1) & 0x55555555);
+	    x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
+	    x = x + (x >> 8);
+	    x = x + (x >> 16);
+	    return x & 0x0000003F;
+*/
+
+int power_of_minus_one(int x) {
+	if ((x & 1) == 0)
+		return 1;
+	return -1;
+}
+
+/*
+unsigned int nbr_of_members(unsigned int subset) {
+	return count_1bits(subset);
+}*/
 
 // We are assuming for now that the family F of subsets of U to be considered
 // is ordered in Gray code order. That is, for each set X = {X1, X2, ..., Xk} in F,
@@ -67,8 +93,12 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 	// Function g
 	vector<int> g(two_to_the_n2);
 
+	// K-cover counter
+	int k = family->size();
+	int ck = 0;
+
 	// DEBUG
-	cout << "NOW STARTING THE MAIN LOOP" << endl << endl;
+	//cout << "NOW STARTING THE MAIN LOOP" << endl << endl;
 
 	// Thanks to our constraint on the ordering of F, we can know for sure
 	// that the subsets X1 of U1 are the first 2^n1 subsets in F
@@ -156,17 +186,33 @@ void fast_zeta_transform_linear_space(int n, vector<int>* family, vector<int>* f
 		
 		for (int i = 0; i < two_to_the_n2; ++i) {
 			int x2 = i * two_to_the_n1;
+			int x = x1 | x2;
 
-			
-			cout << "fS(" << bitset<30>(x1 | x2) 
-				<< " = " << (x1 | x2) 
+			// To print zeta transform fS of f
+			/*
+			cout << "fS(" << bitset<30>(x) 
+				<< " = " << x 
 				<< "): " << g[i] << endl;
+			*/			
 
+			// Calculating k-cover
+			int size_of_U_minus_X = n - count_1bits(x);
+			ck += pow(g[i], k) * power_of_minus_one(size_of_U_minus_X);
 
-			//(*f)[i] = g[i]; // WRONG NORMALIZATION!!
+			// DEBUG
+			/*
+			cout << "x: " << bitset<8>(x) << " = " << x << endl;
+			cout << "1s in x: " << count_1bits(x) << endl;
+			cout << "|U \\ X| = " << size_of_U_minus_X << endl;
+			cout << "-1? " << power_of_minus_one(size_of_U_minus_X) << endl;
+			cout << "(fS(x)=" << g[i] << ")^" << k << " = " << pow(g[i], k) << endl;
+			cout << ck << endl;
+			*/
 		}
 	}
 
+	cout << "Nbr of k-covers: " << ck << endl;
+	cout << "Note: There are " << k << "! different orderings included." << endl;
 	return;
 }
 
