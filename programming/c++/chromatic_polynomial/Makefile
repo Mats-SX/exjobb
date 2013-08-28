@@ -20,8 +20,8 @@ BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= k_cover zeta_transform instance_creator
-OBJS		= k_cover.o instance_creator.o zeta_transform.o fast_zeta_transform.o subset.o bigint.o
+PRGS		= chromatic_polynomial 
+OBJS		= chromatic_polynomail.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
@@ -44,9 +44,7 @@ cleanest: cleaner
 	$(RM) $(BIN)*
 
 # Linking
-zeta_transform: zeta_transform.o subset.o bigint.o
-instance_creator: instance_creator.o
-k_cover: k_cover.o utils.o
+chromatic_polynomial: chromatic_polynomial.o ../zeta_transform/src/utils.o
 
 include $(DFILES)
 
