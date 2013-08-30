@@ -2,6 +2,11 @@
 #include <iostream>
 
 
+Polynomial::Polynomial() {
+	degree = 0;
+	coeffs.resize(0);
+}
+
 Polynomial::Polynomial(const int deg) : degree(deg) {	
 	coeffs.resize(deg + 1);		// polynomial of degree n has n+1 coefficients
 }
@@ -32,6 +37,14 @@ void Polynomial::operator*=(const Polynomial& factor) {
 		coeffs[i] = sum;
 	}
 	return;
+}
+
+void Polynomial::operator*=(const int& factor) {
+	if (factor == 1)
+		return;
+	for (int i = 0; i <= degree; ++i) {
+		coeffs[i] *= factor;
+	}
 }
 
 void Polynomial::add_to_coeff_of_degree(const int term, const int deg) {
@@ -84,4 +97,12 @@ const int Polynomial::get_coeff_of_degree(const int deg) const {
 
 const int Polynomial::get_degree() const {
 	return degree;
+}
+
+std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
+	for (int i = 0; i <= p.degree; ++i) {
+		os << p.coeffs[i] << "z^" << i << " + ";
+	}
+	os << std::endl;
+	return os;
 }

@@ -2,16 +2,20 @@
 #define POLYNOMIAL_H
 
 #include <vector>
+#include <iostream>
 
 class Polynomial {
-	
+	friend std::ostream& operator<<(std::ostream&, const Polynomial&);
 	public:
+	Polynomial();
 	Polynomial(const int);
 	void operator+=(const Polynomial&);
 
 	// Multiplies this polynomial with the parameter polynomial.
 	// This method will not raise the degree of this polynomial.
 	void operator*=(const Polynomial&);
+
+	void operator*=(const int&);
 
 	// This method will throw away all terms of higher degree.
 	// It will not raise the degree of this polynomial.

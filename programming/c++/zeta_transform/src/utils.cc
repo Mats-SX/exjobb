@@ -14,6 +14,24 @@ using namespace std;
  * This function works as a utility function for the Fast Zeta Transform in Linear Space
  * algorithm.
  */
+//template <typename T>
+void utils::fast_zeta_transform_exp_space(int n, vector<Polynomial>* f) {
+
+	for (int j = 1; j <= n; ++j) {
+		int index = 0;
+		int step = pow(2, j-1);
+		while (index < f->size()) {
+			index += step;
+			for (int i = 0; i < step; ++i) {
+				(*f)[index] += (*f)[index - step];
+				++index;
+			}
+		}
+	}
+
+	return;
+}
+
 void utils::fast_zeta_transform_exp_space(int n, vector<int>* f) {
 
 	for (int j = 1; j <= n; ++j) {
@@ -30,6 +48,9 @@ void utils::fast_zeta_transform_exp_space(int n, vector<int>* f) {
 
 	return;
 }
+
+//template <int> utils::fast_zeta_transform_exp_space<int>;
+//template <Polynomial> utils::fast_zeta_transform_exp_space<Polynomial>;
 
 /*
  * This is a utility function for the choice of how to split the n-sized universe U

@@ -20,9 +20,9 @@ void k_partition_linear_space(
 		int n1,
 		int n2,	
 		vector<int>* family, 
-		vector<int>* f, 
+		vector<Polynomial>* f, 
 		int k, 
-		int* dk, 
+		Polynomial* dk, 
 		int split_decision = -1)
 {
 
@@ -34,7 +34,7 @@ void k_partition_linear_space(
 	int u2 = pow(2, n1+n2) - two_to_the_n1;	// Index of U2
 
 	// Function g
-	vector<int> g(two_to_the_n2);
+	vector<Polynomial> g(two_to_the_n2);
 
 	// DEBUG
 	//cout << "NOW STARTING THE MAIN LOOP" << endl << endl;
@@ -51,7 +51,8 @@ void k_partition_linear_space(
 
 		// {{ For each Y2 in U2, set g(Y2) <- 0 }}
 		for (int i = 0; i < two_to_the_n2; ++i) {
-			g[i] = 0;	// We just initialize a 0-vector of size 2^n2.
+			g[i] = Polynomial(0);
+					// We just initialize a 0-vector of size 2^n2.
 					// I see no need to map these values to specific
 					// indices, but instead we make sure we
 					// access the proper value when using g.
@@ -91,23 +92,24 @@ void k_partition_linear_space(
 				
 				//DEBUG
 				//cout << "This is y & u2: " << (y & u2) << endl;
-				/*cout << endl;
-				cout << "y & u2: " << (y & u2) << " = " << bitset<7>(y & u2) << endl;
-				cout << "(y&u2)/2^n1: " << ((y & u2) / two_to_the_n1) << " = "
-					<< bitset<7>(((y & u2) / two_to_the_n1)) << endl;
-				cout << "f(" << i << ") = " << (*f)[i] << endl;
-				*/
+				//cout << endl;
+				//cout << "y & u2: " << (y & u2) << " = " << bitset<7>(y & u2) << endl;
+				//cout << "(y&u2)/2^n1: " << ((y & u2) / two_to_the_n1) << " = "
+				//	<< bitset<7>(((y & u2) / two_to_the_n1)) << endl;
+				//cout << "f(" << i << ") = " << (*f)[i] << endl;
+				
 
 				// TODO: This is supposed to be polynomial addition.
+				// Solved...?
 				g[(y & u2) / two_to_the_n1] += (*f)[i];
 			}
 		}
 		
 		// DEBUG
-		/*cout << "\nThese are the values g(Y2) where Y2 are all subsets of U2:" << endl;
-		for (int i = 0; i < two_to_the_n2; ++i) {
-			cout << "g(" << bitset<7>(i * two_to_the_n1) << "): " << g[i] << endl;
-		}*/
+		//cout << "\ng before fzt:" << endl;
+		//for (int i = 0; i < two_to_the_n2; ++i) {
+		//	cout << "g(" << bitset<4>(i * two_to_the_n1) << "=" << (i* two_to_the_n1) << "): " << g[i] << endl;
+		//}
 
 		// For testing purposes, I safe-copy g here. 
 		// Should be removed when we go live.
@@ -116,6 +118,10 @@ void k_partition_linear_space(
 		// I don't need another vector, so I re-use g as h.
 		// {{ Compute h <- gS using fast zeta transform on 2^U2 }}
 		utils::fast_zeta_transform_exp_space(n2, &g);
+		//cout << "\ng after fzt:" << endl;
+		//for (int i = 0; i < two_to_the_n2; ++i) {
+		//	cout << "g(" << bitset<4>(i * two_to_the_n1) << "=" << (i* two_to_the_n1) << "): " << g[i] << endl;
+		//}
 
 		// The vector g contains all subsets of U2, in increasing
 		// order of index. But the indices of subsets of U2 doesn't come at
@@ -139,18 +145,28 @@ void k_partition_linear_space(
 			int size_of_U_minus_X = n1 + n2 - utils::count_1bits(x);
 			
 			// TODO: This is where we sum kth powers of _polynomials_
-			// It's too tricky to solve right now...
+			// Solved...?
+			
+			// I don't need g[i] more after this, so the mutability is not a problem...
+			//cout << "g[i] before power: " << g[i] << endl;
+			g[i].raise_to_the(k);
+			//cout << "g[i] after power: " << g[i] << endl;
+			g[i] *= utils::power_of_minus_one(size_of_U_minus_X);
+			(*dk) += g[i];
+
+			/* old code:
 			(*dk) += utils::power_of_minus_one(size_of_U_minus_X) 
 				* pow(g[i], k);
-
+			*/
+			
 			// DEBUG
 			/*	
 			cout << "x: " << bitset<4>(x) << " = " << x << endl;
 			cout << "1s in x: " << utils::count_1bits(x) << endl;
 			cout << "|U \\ X| = " << size_of_U_minus_X << endl;
 			cout << "-1? " << utils::power_of_minus_one(size_of_U_minus_X) << endl;
-			cout << "(fS(x)=" << g[i] << ")^" << k << " = " << pow(g[i], k) << endl;
-			cout << *ck << endl;
+			cout << "g[i] = " << g[i] << endl;
+			cout << "dk = " << *dk << endl;
 			*/
 		}
 	}
@@ -228,7 +244,7 @@ int main(int argc, char** argv) {
 	// The function f, mapping from members of F to numbers in a ring R.
 	// Each value x_i in the vector f is the function f's value corresponding to
 	// the set at the same index i in the vector family.
-	vector<int> f(m);		// m empty positions, all will be filled.
+	vector<Polynomial> f(m);		// m empty positions, all will be filled.
 	
 	/* Construct data structures */
 
@@ -237,13 +253,21 @@ int main(int argc, char** argv) {
 		// For k-partitioning, the function f(X)=z^p is a monomial of 
 		// degree p equal to the size of the set, ie p = |X|, for X in F.
 		// TODO: How do we represent polynomials?
-		f[i] = utils::count_1bits(family[i]);
+		// Solved...?
+		int degree = utils::count_1bits(family[i]);
+		Polynomial p(n);
+		p.set_coeff_of_degree_to(degree, 1);
+		f[i] = p;
+
+		// DEBUG:
+		//cout << "input p: " << p << endl;
 	}
 
 	/* Initialize algorithm variables */
 
-	int dk = 0;				// Number of k-covers.
-	int n1, n2;				// Split of n
+	// Polynomial whose n-degree coefficient is the number of k-partitions
+	Polynomial dk(n);
+	int n1, n2;			// Split of n
 
 	/* Splitting n according to input decision */
 
@@ -267,9 +291,9 @@ int main(int argc, char** argv) {
 	
 	cout	<< "===================="
 		<< endl
-		<< "Nbr of k-covers: " << ck 
+		<< "Nbr of k-partitions: " << dk.get_coeff_of_degree(n) 
 		<< endl
-		<< "Note: Different orderings and multiple pickings are also counted."
+		<< "Note: Different orderings are also counted."
 		<< endl;
 
 	return 0;
