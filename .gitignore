@@ -1,5 +1,9 @@
 # Temporary files
 *~
+*.swp
 
 # Object files
 *.o
+
+# header info files
+*.d
