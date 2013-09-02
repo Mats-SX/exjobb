@@ -154,6 +154,22 @@ void utils::fast_zeta_transform_linear_space(
 }
 
 
+void utils::fast_up_zeta_transform_exp_space(int n, vector<Polynomial>* f) {
+	for (int j = 1; j <= n; ++j) {
+		int index = 0;
+		int step = pow(2, j-1);
+		while (index < f->size()) {
+			index += step;
+			for (int i = 0; i < step; ++i) {
+				(*f)[index - step] += (*f)[index];
+				++index;
+			}
+		}
+	}
+
+	return;
+}
+
 /*
  * This is a utility function for the choice of how to split the n-sized universe U
  * into two disjoint parts U1 and U2, of sizes n1 and n2 respectively. U is never
