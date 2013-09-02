@@ -154,6 +154,7 @@ void utils::fast_zeta_transform_linear_space(
 }
 
 
+/* This function is _not_ finished!! TODO */
 void utils::fast_up_zeta_transform_exp_space(int n, vector<Polynomial>* f) {
 	for (int j = 1; j <= n; ++j) {
 		int index = 0;
