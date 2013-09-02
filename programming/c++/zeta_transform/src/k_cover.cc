@@ -1,10 +1,11 @@
-#include <vector>
+//#include <vector>
 #include <iostream>
 #include <fstream>
 #include <math.h>
 #include <bitset>
 #include <cstdlib>
 #include "utils.h"
+#include <gmp.h>
 
 using namespace std;
 
@@ -18,9 +19,12 @@ using namespace std;
 // are stored, each corresponding to a subset on same position in F.
 void k_cover_linear_space(
 		int n1,
-		int n2,	
-		vector<int>* family, 
-		vector<int>* f, 
+		int n2,
+		int** family,
+		int** f,
+		int f_size,
+//		vector<int>* family, 
+//		vector<int>* f, 
 		int k, 
 		int* ck, 
 		int split_decision = -1)
@@ -34,7 +38,8 @@ void k_cover_linear_space(
 	int u2 = pow(2, n1+n2) - two_to_the_n1;	// Index of U2
 
 	// Function g
-	vector<int> g(two_to_the_n2);
+	int* g = new int[two_to_the_n2];
+//	vector<int> g(two_to_the_n2);
 
 	// DEBUG
 	//cout << "NOW STARTING THE MAIN LOOP" << endl << endl;
@@ -58,7 +63,7 @@ void k_cover_linear_space(
 		}
 
 		// {{ For each Y in F, if YnU1 is a subset of X1, then set g(YnU2) <- g(YnU2) + f(Y) }}
-		for (int i = 0; i < family->size(); ++i) {
+		for (int i = 0; i < f_size; ++i) {
 			int y = (*family)[i];
 
 			//DEBUG
@@ -114,7 +119,7 @@ void k_cover_linear_space(
 
 		// I don't need another vector, so I re-use g as h.
 		// {{ Compute h <- gS using fast zeta transform on 2^U2 }}
-		utils::fast_zeta_transform_exp_space(n2, &g);
+		utils::fast_zeta_transform_exp_space(n2, &g, f_size);
 
 		// The vector g contains all subsets of U2, in increasing
 		// order of index. But the indices of subsets of U2 doesn't come at
@@ -128,11 +133,11 @@ void k_cover_linear_space(
 			int x = x1 | x2;
 
 			// To print zeta transform fS of f
-			/*
+			
 			cout << "fS(" << bitset<30>(x) 
 				<< " = " << x 
 				<< "): " << g[i] << endl;
-			*/			
+						
 
 			// Calculating k-cover
 			int size_of_U_minus_X = n1 + n2 - utils::count_1bits(x);
@@ -219,13 +224,15 @@ int main(int argc, char** argv) {
 	/* Initialize data structures */
 
 	// The subset family F
-	vector<int> family(m);		// m empty positions, all will be filled.
+//	vector<int> family(m);		// m empty positions, all will be filled.
+	int* family = new int[m];
 
 	// The function f, mapping from members of F to numbers in a ring R.
 	// Each value x_i in the vector f is the function f's value corresponding to
 	// the subset at the same index i in the vector family.
-	vector<int> f(m);		// m empty positions, all will be filled.
-	
+//	vector<int> f(m);		// m empty positions, all will be filled.
+	int* f = new int[m];
+
 	/* Construct data structures */
 
 	for (int i = 0; i < m; ++i) {
@@ -253,7 +260,7 @@ int main(int argc, char** argv) {
 		<< "===================="
 		<< endl;
 
-	k_cover_linear_space(n1, n2, &family, &f, k, &ck, split_decision);
+	k_cover_linear_space(n1, n2, &family, &f, k, m, &ck, split_decision);
 	
 
 	/* Output */

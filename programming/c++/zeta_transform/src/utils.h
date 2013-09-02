@@ -8,6 +8,7 @@ namespace utils {
 //	template <typename T>
 //	void fast_zeta_transform_exp_space(int, std::vector<T>*); 
 	void fast_up_zeta_transform_exp_space(int, std::vector<Polynomial>*);
+	void fast_zeta_transform_exp_space(int, int**, int);
 	void fast_zeta_transform_exp_space(int, std::vector<Polynomial>*); 
 	void fast_zeta_transform_exp_space(int, std::vector<int>*); 
 	void pick_n2(int*, int*, int, int, int);
