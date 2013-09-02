@@ -153,7 +153,29 @@ void utils::fast_zeta_transform_linear_space(
 	return;
 }
 
+<<<<<<< HEAD
+=======
+void utils::fast_zeta_transform_exp_space(int n, int** f, int f_size) {
+	for (int j = 1; j <= n; ++j) {
+		int index = 0;
+		int step = pow(2, j-1);
+		while (index < f_size) {
+			index += step;
+			for (int i = 0; i < step; ++i) {
+				(*f)[index] += (*f)[index - step];
+				++index;
+			}
+		}
+	}
 
+	return;
+}
+
+//template <int> utils::fast_zeta_transform_exp_space<int>;
+//template <Polynomial> utils::fast_zeta_transform_exp_space<Polynomial>;
+>>>>>>> Changed implementation in k-cover from vectors to int arrays in
+
+/* This function is _not_ finished!! TODO */
 void utils::fast_up_zeta_transform_exp_space(int n, vector<Polynomial>* f) {
 	for (int j = 1; j <= n; ++j) {
 		int index = 0;
