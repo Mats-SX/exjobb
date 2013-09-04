@@ -4,7 +4,7 @@
 #include "polynomial.h"
 
 typedef int int_t;
-typedef short rval_t;
+typedef Polynomial rval_t;
 
 template <class T>
 class PointerList {

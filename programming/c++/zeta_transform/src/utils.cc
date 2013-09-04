@@ -50,7 +50,7 @@ void utils::fast_zeta_transform_linear_space(
 		int_list_t* family,
 		rval_list_t* f,
 		int_t k,
-		rval_t* ck)
+		rval_t* pk)
 {
 
 	// Variables we only want to calculate once
@@ -152,10 +152,18 @@ void utils::fast_zeta_transform_linear_space(
 				<< "): " << g[i] << endl;
 			*/			
 
-			// Calculating k-cover
-			int_t size_of_U_minus_X = n1 + n2 - count_1bits(x);
-			(*ck) += power_of_minus_one(size_of_U_minus_X) 
-				* pow(g[i], k);
+			// Calculating k-packing
+
+			int_t size_of_X = count_1bits(x);
+
+			g[i].raise_to_the(k);
+			Polynomial p(n1 + n2);
+			p.set_coeff_of_degree_to(0, 1);
+			p.set_coeff_of_degree_to(1, 1);		// p = 1 + z
+			p.raise_to_the(size_of_X);
+			p *= power_of_minus_one(n1 + n2 - size_of_X);
+			g[i] *= p;
+			(*pk) += g[i];
 
 			// DEBUG
 			/*	
