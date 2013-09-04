@@ -19,9 +19,9 @@ using namespace std;
  */
 void utils::fast_zeta_transform_exp_space(int_t n, rval_list_t* f) {
 
-	for (int j = 1; j <= n; ++j) {
-		int index = 0;
-		int step = pow(2, j-1);
+	for (int_t j = 1; j <= n; ++j) {
+		int_t index = 0;
+		int_t step = pow(2, j-1);
 		while (index < f->size) {
 			index += step;
 			for (int i = 0; i < step; ++i) {
@@ -50,8 +50,7 @@ void utils::fast_zeta_transform_linear_space(
 		int_list_t* family,
 		rval_list_t* f,
 		int_t k,
-		rval_t* ck,
-		problem_t p)
+		rval_t* ck)
 {
 
 	// Variables we only want to calculate once
@@ -62,7 +61,6 @@ void utils::fast_zeta_transform_linear_space(
 	int_t u2 = pow(2, n1+n2) - two_to_the_n1;	// Index of U2
 
 	// Function g
-	// TODO fix constructor so it works for pointer and vector
 	rval_list_t g(two_to_the_n2);
 
 	// DEBUG
@@ -137,10 +135,6 @@ void utils::fast_zeta_transform_linear_space(
 			cout << "g(" << bitset<7>(i * two_to_the_n1) << "): " << g[i] << endl;
 		}*/
 
-		// For testing purposes, I safe-copy g here. 
-		// Should be removed when we go live.
-//		vector<int> safe_copy(g);
-
 		// I don't need another vector, so I re-use g as h.
 		// {{ Compute h <- gS using fast zeta transform on 2^U2 }}
 		fast_zeta_transform_exp_space(n2, &g);
@@ -157,19 +151,17 @@ void utils::fast_zeta_transform_linear_space(
 			int_t x = x1 | x2;
 
 			// To print zeta transform fS of f
+			
 			/*
 			cout << "fS(" << bitset<30>(x) 
 				<< " = " << x 
 				<< "): " << g[i] << endl;
 			*/			
-			if (p == k_cover) {
-				// Calculating k-cover
-				int_t size_of_U_minus_X = n1 + n2 - count_1bits(x);
-				(*ck) += power_of_minus_one(size_of_U_minus_X) 
-					* pow(g[i], k);
-			} else {
-				// k-partition and k-packing
-			}
+
+			// Calculating k-cover
+			int_t size_of_U_minus_X = n1 + n2 - count_1bits(x);
+			(*ck) += power_of_minus_one(size_of_U_minus_X) 
+				* pow(g[i], k);
 
 			// DEBUG
 			/*	
@@ -182,6 +174,7 @@ void utils::fast_zeta_transform_linear_space(
 			*/
 		}
 	}
+	
 
 	return;
 }

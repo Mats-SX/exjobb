@@ -5,7 +5,7 @@
 
 namespace utils {
 	void fast_zeta_transform_exp_space(int_t, rval_list_t*);
-	void fast_zeta_transform_linear_space(int_t, int_t, int_list_t*, rval_list_t*);
+	void fast_zeta_transform_linear_space(int_t, int_t, int_list_t*, rval_list_t*, int_t, rval_t*);
 	void pick_n2(int_t*, int_t*, int_t, int_t, int);
 	int_t count_1bits(int);
 	int_t count_1bits(long long);
