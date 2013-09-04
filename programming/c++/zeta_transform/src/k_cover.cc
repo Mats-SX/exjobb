@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
 		<< "===================="
 		<< endl;
 
-	utils::fast_zeta_transform_linear_space(n1, n2, &family, &f, k, &ck, k_cover);
+	utils::fast_zeta_transform_linear_space(n1, n2, &family, &f, k, &ck);
 
 	/* Output */
 	

@@ -41,7 +41,7 @@ cleaner: clean
 	$(RM) $(DFILES)
 
 cleanest: cleaner
-	$(RM) $(BIN)*
+	$(RM) $(BIN)* $(VPATH)*~
 
 # Linking
 k_cover: k_cover.o utils.o types.o
