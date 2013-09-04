@@ -4,7 +4,7 @@
 #include "polynomial.h"
 
 typedef int int_t;
-typedef char rval_t;
+typedef short rval_t;
 
 template <class T>
 class PointerList {
@@ -14,14 +14,14 @@ class PointerList {
 		size = s;
 		list = new T[s];
 	}
+	~PointerList() {
+		delete[] list;
+	}
 	int_t size;
 	T& operator[](const int i) { return list[i]; }
 };
 
 typedef PointerList<int_t> int_list_t;
-//typedef PointerList<Polynomial> pol_list_t;
 typedef PointerList<rval_t> rval_list_t;
-
-enum problem_t { k_cover, k_partition, k_packing };
 
 #endif

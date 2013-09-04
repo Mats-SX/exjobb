@@ -27,7 +27,7 @@ DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 # default targets
 .PHONY: all install clean
 
-firsttarget: install
+firsttarget: install clean
 
 all: $(PRGS)
 
@@ -41,7 +41,7 @@ cleaner: clean
 	$(RM) $(DFILES)
 
 cleanest: cleaner
-	$(RM) $(BIN)*
+	$(RM) $(BIN)* $(VPATH)*~
 
 # Linking
 instance_creator: instance_creator.o
