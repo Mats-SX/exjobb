@@ -20,8 +20,8 @@ BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= k_cover
-OBJS		= types.o utils.o k_cover.o 
+PRGS		= k_partition
+OBJS		= types.o utils.o k_partition.o polynomial.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
@@ -44,11 +44,8 @@ cleanest: cleaner
 	$(RM) $(BIN)* $(VPATH)*~
 
 # Linking
-instance_creator: instance_creator.o
-k_cover: k_cover.o utils.o types.o
+instance_creator: instance_creator.oi
 k_partition: k_partition.o utils.o polynomial.o pol_types.o
-k_packing: k_packing.o utils.o polynomial.o pol_types.o
-poly_test: poly_test.o polynomial.o
 
 include $(DFILES)
 
