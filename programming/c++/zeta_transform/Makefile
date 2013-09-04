@@ -20,8 +20,8 @@ BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= poly_test zeta_transform instance_creator
-OBJS		= poly_test.o polynomial.o utils.o instance_creator.o zeta_transform.o fast_zeta_transform.o
+PRGS		= poly_test fast_zeta_transform instance_creator
+OBJS		= poly_test.o polynomial.o utils.o instance_creator.o fast_zeta_transform.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
@@ -44,7 +44,7 @@ cleanest: cleaner
 	$(RM) $(BIN)*
 
 # Linking
-zeta_transform: zeta_transform.o subset.o bigint.o
+fast_zeta_transform: fast_zeta_transform.o utils.o polynomial.o
 instance_creator: instance_creator.o
 poly_test: poly_test.o polynomial.o
 
