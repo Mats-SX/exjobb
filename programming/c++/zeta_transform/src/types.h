@@ -1,8 +1,6 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include "polynomial.h"
-
 typedef int int_t;
 typedef short rval_t;
 
