@@ -2,8 +2,17 @@
 *~
 *.swp
 
+# TeX extra-files
+*.aux
+*.log
+*.out
+*.backup
+
 # Object files
 *.o
 
 # header info files
 *.d
+
+# Don't include binaries. They are giving me a headache.
+bin/
