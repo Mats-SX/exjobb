@@ -44,8 +44,8 @@ cleanest: cleaner
 	$(RM) $(BIN)* $(VPATH)*~
 
 # Linking
-instance_creator: instance_creator.oi
-k_partition: k_partition.o utils.o polynomial.o pol_types.o
+instance_creator: instance_creator.o
+k_partition: k_partition.o utils.o polynomial.o types.o
 
 include $(DFILES)
 
