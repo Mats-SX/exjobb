@@ -20,14 +20,14 @@ BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= k_packing poly_test k_partition k_cover zeta_transform instance_creator
-OBJS		= poly_test.o k_packing.o k_partition.o polynomial.o utils.o k_cover.o instance_creator.o zeta_transform.o fast_zeta_transform.o subset.o bigint.o
+PRGS		= poly_test zeta_transform instance_creator
+OBJS		= poly_test.o polynomial.o utils.o instance_creator.o zeta_transform.o fast_zeta_transform.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
 .PHONY: all install clean
 
-firsttarget: install
+firsttarget: install clean
 
 all: $(PRGS)
 
@@ -46,9 +46,6 @@ cleanest: cleaner
 # Linking
 zeta_transform: zeta_transform.o subset.o bigint.o
 instance_creator: instance_creator.o
-k_cover: k_cover.o utils.o polynomial.o
-k_partition: k_partition.o utils.o polynomial.o
-k_packing: k_packing.o utils.o polynomial.o
 poly_test: poly_test.o polynomial.o
 
 include $(DFILES)
