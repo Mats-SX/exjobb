@@ -2,6 +2,7 @@
 #include <math.h>
 #include <vector>
 #include "../../zeta_transform/src/utils.h"
+#include "../../zeta_transform/src/polynomial.h"
 
 using namespace std;
 
@@ -44,15 +45,11 @@ int main(int argc, char** argv) {
 	int v2 = two_to_the_n - two_to_the_n1;
 
 	// Data structures
-	// These are supposed to be vectors of polynomials
-	// TODO
-	vector<int> h(two_to_the_n2);
-	vector<int> l(two_to_the_n2);
+	vector<Polynomial> h(two_to_the_n2);
+	vector<Polynomial> l(two_to_the_n2);
 
 	// 1.
-	// TODO: This is supposed to be a polynomial.
-	// How do I represent it?
-	int r  = 0;
+	Polynomial r(n);
 
 	// {{ 2. For each subset X1 of V1, do }}
 	for (int x1 = 0; x1 <= v1; ++x1) {
@@ -76,7 +73,9 @@ int main(int argc, char** argv) {
 				if (independent(y1)) {
 					// This is _polynomial_ addition.
 					// How do I represent polynomials again?
-					h[v2 & (~ neighbours_of(y1))] += utils::count_1bits(y1);
+					Polynomial p(n);
+					p.set_coeff_of_degree_to(utils::count_1bits(y1), 1);
+					h[v2 & (~ neighbours_of(y1))] += p;
 				}
 			}
 		}
@@ -87,41 +86,40 @@ int main(int argc, char** argv) {
 		for (int i = 0; i < two_to_the_n2; ++i) {
 			int y2 = i * two_to_the_n1;
 			if (independent(y2)) {
-				// l[i] = z^(|Y2|)
-				l[i] = utils::count_1bits(y2);
+				Polynomial p(n);
+				p.set_coeff_of_degree_to(utils::count_1bits(y2), 1);
+				l[i] = p;
 			} else {
-				l[i] = 0;
+				l[i] = Polynomial(n);
 			}
 		}
 
 		// {{ d) Set g <- (hS')*l }}
-		// TODO
-		vector<int> g(two_to_the_n2);
-		utils::fast_up_zeta_transform_exp_space(&h, &g);
+		//vector<Polynomial> g(two_to_the_n2);
+		utils::fast_up_zeta_transform_exp_space(n, &h);
+
 		for (int i = 0; i < two_to_the_n2; ++i) {
-			// polynomial multiplication!
-			g[i] = g[i] * l[i];
+			h[i] *= l[i];
 		}
 
 		// {{ e) Set j <- gS }}
-		// TODO
-		vector<int> j(two_to_the_n2);
-		utils::fast_zeta_transform_exp_space(&g, &l);
+		//vector<Polynomial> j(two_to_the_n2);
+		utils::fast_zeta_transform_exp_space(n, &h);
 
 		// {{ For each subset X2 of V2,
 		// set r <- r + (-1)^(n-|X1|-|X2|) * j(X2)^k }}
 		for (int i = 0; i < two_to_the_n2; ++i) {
 			int x2 = i * two_to_the_n1;
 			int exponent = n - utils::count_1bits(x1) - utils::count_1bits(x2);
-			// TODO Polynomial addition and multiplication
-			r += utils::power_of_minus_one(exponent) * pow(j[i], k);
+			h[i].raise_to_the(k);
+			h[i] *= utils::power_of_minus_one(exponent);
+			r += h[i];
 		}
 
 	}
 
 	// { 3. Return the coefficient of z^n in r }}
-	// TODO: Again, polynomial representation!
-	
+	cout << "Number of " << k << "-colourings: " << r.get_coeff_of_degree(n) << endl;	
 	
 	return 0;
 }
