@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 	cin >> df;
 	cout << endl;
 
-	cout << "Generate ring values? [0/*]: ";
+	cout << "Generate ring values? [0 means yes]: ";
 	cin >> rvals;
 	cout << endl;
 
