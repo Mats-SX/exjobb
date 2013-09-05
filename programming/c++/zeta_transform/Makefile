@@ -21,7 +21,7 @@ BIN		= $(HOME)/bin/
 
 # Programs
 PRGS		= k_packing
-OBJS		= types.o utils.o k_cover.o polynomial.o
+OBJS		= types.o utils.o k_packing.o polynomial.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
