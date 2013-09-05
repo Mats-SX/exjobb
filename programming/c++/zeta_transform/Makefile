@@ -6,6 +6,8 @@ DEBUG = true
 CXX		= g++
 CC		= g++
 
+LDLIBS		+= -lgmpxx -lgmp	# For GMP links
+
 ifeq ($(DEBUG), true)
 CPPFLAGS += -ggdb
 LDFLAGS += -ggdb
