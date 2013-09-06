@@ -1,57 +1,82 @@
 #include <iostream>
 #include <fstream>
-#include <math.h>
 #include <set>
-#include <cstdlib>
+#include <gmpxx.h>
+#include <gmp.h>
 
 using namespace std;
 
+/*
+ * Expected input: ofname
+ * ofname: Name of output file.
+ */
 int main(int argc, char** argv) {
-	int n, f;
 
-	cout << "Welcome to the Fast Zeta Transform in Linear Space instance generator!" << endl;
-	cout << "This generator produces instances where n < 31 and all function values f(x) < 2^n" << endl;
+	cout << "Instance Creator for Fast Zeta Transform-based problems." << endl;
 
-	ostream* output_p;
-	if (argc == 1) {
-		cout << "Output will be given to stdout. "
-			<< "If you would like to write to file, "
-			<< "use syntax instance_creator <filename>." << endl;
-		output_p = &cout;
-	} else if (argc == 2) {
-		cout << "Output will be given to file: " << argv[1] << endl;
-		output_p = new ofstream(argv[1]);
-	} else {
-		cout << "Not a legal value for first argument!" << endl;
-		return 1;
+	if (argc < 2) {
+		cout	<< "Too few arguments." << endl
+			<< "Usage: ic <ofname>" << endl
+			<< "Now exiting." << endl;
+		return 0;
 	}
-	//ostream output = *output_p;
-	//delete output_p;
-	
-	cout << "Please specify your universe range n = ";
+
+	/* Parameters */
+
+	mpz_class n, df;
+	bool rvals = false;
+
+	/* Read values */
+
+	cout << "Universe size: ";
 	cin >> n;
-	if (n > 31) {
-		cout << "n > 31 not allowed!" << endl;
-		return 1;
-	}
-	cout << "How many subsets would you like to include?\n f = ";
-	cin >> f;
+	cout << endl;
 
-	cout << "Input given: n = " << n << ", f = " << f << "." << endl;
+	cout << "Subset density (per thousand): ";
+	cin >> df;
+	cout << endl;
 
-	cout << "\nNow generating sequence ..." << endl;
+	cout << "Generate ring values? [0 means yes]: ";
+	cin >> rvals;
+	cout << endl;
 
-	(*output_p) << n << " " << f << endl;
+	/* Tell user what's been read */
+
+	cout	<< "Input given: n = " << n 
+		<< ", df = " << df 
+		<< ", rvals = " << rvals
+		<< "." 
+		<< endl;
+
+	cout << "==========" << endl;
+
+	/* Generate instance */
+
+	cout << "Now generating instance ..." << endl;
+
+	ofstream ofs(argv[1]);
 	
-	set<int> pool;
-	int two_to_the_n = pow(2, n);
+	ofs << n << " " << df << endl;
 
-	while (pool.size() != f) {
-		int r = rand() % two_to_the_n;
-		pool.insert(r);
+	set<mpz_class> pool;
+	mpz_class two_to_the_n;
+	mpz_ui_pow_ui(two_to_the_n.get_mpz_t(), 2, n.get_ui());
+	mpz_class f = (df * two_to_the_n) / 1000;
+
+	gmp_randclass rand(gmp_randinit_default);
+	
+	while (pool.size() != f.get_ui()) {
+		pool.insert(rand.get_z_range(two_to_the_n));
 	}
-	for (set<int>::iterator itr = pool.begin(); itr != pool.end(); ++itr) {
-		int f_val = rand() % two_to_the_n;
-		(*output_p) << (*itr) << " " << f_val << endl;
+
+	for (set<mpz_class>::iterator itr = pool.begin(); itr != pool.end(); ++itr) {
+		ofs << (*itr);
+		if (rvals) {
+			ofs << " " << rand.get_z_range(two_to_the_n);
+		}
+		ofs << endl;
 	}
+
+	cout << pool.size() << " lines written to " << argv[1] << ". Bye bye." << endl;
+	return 0;
 }
