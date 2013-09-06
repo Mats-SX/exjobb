@@ -56,12 +56,12 @@ int main(int argc, char** argv) {
 
 	ofstream ofs(argv[1]);
 	
-	ofs << n << " " << df << endl;
-
 	set<mpz_class> pool;
 	mpz_class two_to_the_n;
 	mpz_ui_pow_ui(two_to_the_n.get_mpz_t(), 2, n.get_ui());
 	mpz_class f = (df * two_to_the_n) / 1000;
+
+	ofs << n << " " << f << endl;
 
 	gmp_randclass rand(gmp_randinit_default);
 	
