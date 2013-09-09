@@ -23,7 +23,7 @@ BIN		= $(HOME)/bin/
 
 # Programs
 PRGS		= instance_creator
-OBJS		= utils.o instance_creator.o
+OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
@@ -40,7 +40,7 @@ clean:
 	$(RM) $(OBJS)
 
 cleaner: clean
-	$(RM) $(DFILES)
+	$(RM) $(VPATH)*.d
 
 cleanest: cleaner
 	$(RM) $(BIN)*
