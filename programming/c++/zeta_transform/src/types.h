@@ -2,7 +2,7 @@
 #define TYPES_H
 
 typedef int int_t;
-typedef short rval_t;
+typedef int rval_t;
 
 template <class T>
 class PointerList {

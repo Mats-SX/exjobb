@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
 
 	/* Splitting n according to input decision */
 
-	utils::pick_n2(&n1, &n2, m, n, split);
+	utils::pick_n2(n1, n2, m, n, split);
 	
 	cout	<< "n1 = "	<< n1
 		<< ", n2 = "	<< n2
@@ -108,7 +108,13 @@ int main(int argc, char** argv) {
 		<< "===================="
 		<< endl;
 
-	utils::fast_zeta_transform_linear_space(n1, n2, &family, &f, k, &ck);
+	// Special case k = 1
+	if (k == 1) {
+		if (utils::count_1bits(family[m - 1]) == n) {
+			ck = 1;
+		}
+	} else
+		utils::fast_zeta_transform_linear_space(n1, n2, &family, &f, k, &ck);
 
 	/* Output */
 	
