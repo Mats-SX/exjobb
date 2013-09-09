@@ -1,6 +1,6 @@
 
 # le debug options
-DEBUG = true
+DEBUG = false
 
 # le flags >_<
 CXX		= g++
@@ -23,7 +23,7 @@ BIN		= $(HOME)/bin/
 
 # Programs
 PRGS		= k_partition
-OBJS		= types.o utils.o k_partition.o polynomial.o
+OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
@@ -40,13 +40,12 @@ clean:
 	$(RM) $(OBJS)
 
 cleaner: clean
-	$(RM) $(DFILES)
+	$(RM) $(VPATH)*.d
 
 cleanest: cleaner
 	$(RM) $(BIN)* $(VPATH)*~
 
 # Linking
-instance_creator: instance_creator.o
 k_partition: k_partition.o utils.o polynomial.o types.o
 
 include $(DFILES)

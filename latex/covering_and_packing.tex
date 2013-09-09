@@ -27,10 +27,14 @@ The core of the algorithm is the Fast Zeta Transform (FZT) in Linear Space, pres
 \section{Representation of polynomials}
 How to handle polynomial representation is an open question, relevant for $k$-partition and $k$-packing. Two approaches comes to mind; firstly the explicit, direct representation of polynomials as a vector of coefficients, where addition and multiplication is performed in time polynomial to the degree of the polynomial. Secondly, one could evaluate each polynomial at sufficiently many (constant number?) small integers, and recover the coefficients by interpolation and the Chinese Remainder Theorem \cite{CRT}.
 
+\section{First implications and limitations}
+My initial idea was to test many things. Too many, I soon realized, as some simple calculations showed that I would need over a hundred graphs to present the results. This is of course infeasible due to lack of space and time (no pun intended). So, instead of allowing both \code{std::vector}- and pointer-based list structures, I will resort to only keep pointer-based lists. Although it would be interesting to see whether \code{std::vector} provides a lot of overhead for large structures, this will have to be deduced elsewhere.
+
+When performing intitial try-outs for my problem instances, I soon realized that it wasn't the sums of the FZT that would be the problem, as I initially had believed. Instead, the large sum is (of course) the result sum of the various problems, since that is the sum that has its terms raised to $k$. This is partly due to the fact that the algorithm considers the solutions $S_1, S_2$ and $S_2, S_1$ equal, the number of solutions is not just the every correct combination of sets, but also all permutations of every combinations (which means that a unique solution is multiplied by a factor $O(k!)$). Fact is, the numbers grow so fast that my plan of testing the algorithms using standard integral types as well as multiple precision types are of no use; a 32-bit integer rolls over even for $n=12$ in one of the instances. 
+
 \subsection{Complexity of arithmetics}
 
 \section{Test structure}
-
 
 \subsection{FZT in Linear Space}
 
