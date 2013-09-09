@@ -1,102 +1,87 @@
 #include "polynomial.h"
 #include <iostream>
+#include <gmp.h>
 
 
-Polynomial::Polynomial() {
-	degree = 0;
-	coeffs.resize(0);
-}
+Polynomial::Polynomial() { }
 
-Polynomial::Polynomial(const int deg) : degree(deg) {	
-	coeffs.resize(deg + 1);		// polynomial of degree n has n+1 coefficients
+Polynomial::~Polynomial() {
+	if (degree == 0) {
+		delete coeffs;
+		return;
+	}
+	for (int i = 0; i <= degree; ++i) {
+		mpz_clear(coeffs[i]);
+	}
+	delete[] coeffs;
 }
 
 void Polynomial::operator+=(const Polynomial& term) {
-	if (degree < term.get_degree()) {
-		for (int i = 0; i <= degree; ++i) {
-			coeffs[i] += term.get_coeff_of_degree(i);
-		}
-		for (int i = degree + 1; i <= term.get_degree(); ++i) {
-			coeffs.push_back(term.get_coeff_of_degree(i));
-		}
-		degree = term.get_degree();
-	} else {
-		for (int i = 0; i <= term.get_degree(); ++i) {
-			coeffs[i] += term.get_coeff_of_degree(i);
-		}
+	for (int i = 0; i <= term.degree; ++i) {
+		mpz_add(coeffs[i], coeffs[i], term.coeffs[i]);
 	}
 	return;
 }
 
 void Polynomial::operator*=(const Polynomial& factor) {
 	for (int i = degree; i > -1; --i) {
-		int sum = 0;
-		for (int j = 0; j <= i && j <= factor.degree; ++j) {
-			sum += factor.coeffs[j] * coeffs[i-j];
+		mpz_t sum;
+		mpz_init(sum);
+		for (int j = 0; j <= i && j<= factor.degree; ++j) {
+			mpz_addmul(sum, factor.coeffs[j], coeffs[i - j]);
 		}
-		coeffs[i] = sum;
+		mpz_set(coeffs[i], sum);
+		mpz_clear(sum);
 	}
-	return;
 }
 
 void Polynomial::operator*=(const int& factor) {
 	if (factor == 1)
 		return;
 	for (int i = 0; i <= degree; ++i) {
-		coeffs[i] *= factor;
+		mpz_mul_si(coeffs[i], coeffs[i], factor);
 	}
 }
 
-void Polynomial::add_to_coeff_of_degree(const int term, const int deg) {
-	if (deg > degree || deg < 0) {
-		return;
-	}
-	coeffs[deg] += term;
-	return;
+mpz_t& Polynomial::operator[](const int& index) {
+	return coeffs[index];
 }
 
 void Polynomial::raise_to_the(const int power) {
-	if (power == 0) {
-		degree = 0;
-		coeffs.resize(0);
-		return;
-	}
-	std::vector<int> sums(coeffs);
-	for (int k = 1; k < power; ++k) {
-		for (int i = degree; i > -1; --i) {
-			int sum = 0;
-			for (int j = 0; j <= i; ++j) {
-				sum += coeffs[j] * sums[i-j];
-			}
-			sums[i] = sum;
+	if (power < 0)
+		return;		// This is unsupported
+	if (power  == 0) {
+		for (int i = 1; i <= degree; ++i) {
+			mpz_set_ui(coeffs[i], 0);
 		}
-	}
-	coeffs = sums;
-	return;
-}
-
-void Polynomial::set_coeff_of_degree_to(const int deg, const int coeff) {
-	if (deg > degree || deg < 0) {
+		mpz_set_ui(coeffs[0], 1);
 		return;
 	}
-	/* DEBUG
-	std::cout << "degree: " << degree << std::endl;
-	std::cout << "deg: " << deg << std::endl;
-	std::cout << "coeffs size: " << coeffs.size() << std::endl;
-	*/
-	coeffs[deg] = coeff;
+	if (power == 1)
+		return;
+
+	// power >= 2
+	
+	// Make a copy p of this polynomial
+	Polynomial p;
+	p.set_degree(degree);
+	for (int i = 0; i <= degree; ++i) {
+		mpz_set(p[i], coeffs[i]);
+	}
+
+	for (int k = 1; k < power; ++k) {
+		*this *= p;		// Multiply this with the copy power-1 times
+	}
+	
 	return;
 }
 
-const int Polynomial::get_coeff_of_degree(const int deg) const {
-	if (deg > degree || deg < 0) {
-		return 0;
+void Polynomial::set_degree(const int deg) {
+	degree = deg;
+	coeffs = new mpz_t[deg + 1];
+	for (int i = 0; i <= degree; ++i) {
+		mpz_init(coeffs[i]);
 	}
-	return coeffs[deg];
-}
-
-const int Polynomial::get_degree() const {
-	return degree;
 }
 
 std::ostream& operator<<(std::ostream& os, const Polynomial& p) {
