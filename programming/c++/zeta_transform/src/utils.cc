@@ -183,23 +183,31 @@ void utils::fast_zeta_transform_linear_space(
  * into two disjoint parts U1 and U2, of sizes n1 and n2 respectively. U is never
  * explicitly defined, as it suffices to work with n.
  */
-void utils::pick_n2(int_t* n1, int_t* n2, int_t f_size, int_t n, int split_decision) {
+void utils::pick_n2(int_t& n1, int_t& n2, const int_t& f_size, const int_t& n, const int split_decision) {
 
 	switch (split_decision) {
 		case -1:
-			*n2 = ceil(log2(f_size));
+			n2 = ceil(log2(f_size));
 			break;
 		case 0:
-			*n2 = n / 2;
+			n2 = n / 2;
 			break;
 		case 1:
-			*n2 = 0;
+			n2 = 1;
 			break;
 		case 2:
-			*n2 = n - 1;
+			n2 = n - 1;
 			break;
 	}
-	*n1 = n - *n2;
+	n1 = n - n2;
+
+	if (n1 == 0) {
+		n1 = 1;
+		--n2;
+	} else if (n2 == 0) {
+		n2 = 1;
+		--n1;
+	}
 }
 
 // Shameful copy-paste from stackoverflow.com: http://stackoverflow.com/questions/4244274/how-do-i-count-the-number-of-zero-bits-in-an-integer
