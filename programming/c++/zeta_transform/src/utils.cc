@@ -3,6 +3,7 @@
 #include "types.h"
 #include <iostream>
 #include <bitset>
+#include <gmp.h>
 
 using namespace std;
 
@@ -25,7 +26,8 @@ void utils::fast_zeta_transform_exp_space(int_t n, rval_list_t* f) {
 		while (index < f->size) {
 			index += step;
 			for (int_t i = 0; i < step; ++i) {
-				(*f)[index] += (*f)[index - step];
+				mpz_add((*f)[index], (*f)[index], (*f)[index - step]);
+//				(*f)[index] += (*f)[index - step];
 				++index;
 			}
 		}
@@ -79,7 +81,8 @@ void utils::fast_zeta_transform_linear_space(
 
 		// {{ For each Y2 in U2, set g(Y2) <- 0 }}
 		for (int_t i = 0; i < two_to_the_n2; ++i) {
-			g[i] = 0;	// We just initialize a 0-vector of size 2^n2.
+			mpz_init(g[i]);
+			//g[i] = 0;	// We just initialize a 0-vector of size 2^n2.
 					// I see no need to map these values to specific
 					// indices, but instead we make sure we
 					// access the proper value when using g.
@@ -125,8 +128,10 @@ void utils::fast_zeta_transform_linear_space(
 					<< bitset<7>(((y & u2) / two_to_the_n1)) << endl;
 				cout << "f(" << i << ") = " << (*f)[i] << endl;
 				*/
-
-				g[(y & u2) / two_to_the_n1] += (*f)[i];
+				
+				mpz_add(g[(y & u2) / two_to_the_n1], 
+					g[(y & u2) / two_to_the_n1], (*f)[i]); 
+//				g[(y & u2) / two_to_the_n1] += (*f)[i];
 			}
 		}
 		
@@ -161,15 +166,18 @@ void utils::fast_zeta_transform_linear_space(
 
 			// Calculating k-cover
 			int_t size_of_U_minus_X = n1 + n2 - count_1bits(x);
-			(*ck) += power_of_minus_one(size_of_U_minus_X) 
-				* pow(g[i], k);
+			mpz_pow_ui(g[i], g[i], k);
+			mpz_mul_si(g[i], g[i], power_of_minus_one(size_of_U_minus_X));
+			mpz_add((*ck), (*ck), g[i]);
+//			(*ck) += power_of_minus_one(size_of_U_minus_X) * pow(g[i], k);
+
 
 			// DEBUG
-			/*	
-			cout << "x: " << bitset<4>(x) << " = " << x << endl;
-			cout << "1s in x: " << utils::count_1bits(x) << endl;
+			/*
+			cout << "x: " << bitset<10>(x) << " = " << x << endl;
+			cout << "1s in x: " << count_1bits(x) << endl;
 			cout << "|U \\ X| = " << size_of_U_minus_X << endl;
-			cout << "-1? " << utils::power_of_minus_one(size_of_U_minus_X) << endl;
+			cout << "-1? " << power_of_minus_one(size_of_U_minus_X) << endl;
 			cout << "(fS(x)=" << g[i] << ")^" << k << " = " << pow(g[i], k) << endl;
 			cout << *ck << endl;
 			*/

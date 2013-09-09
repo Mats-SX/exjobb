@@ -1,6 +1,6 @@
 
 # le debug options
-DEBUG = false
+DEBUG = true
 
 # le flags >_<
 CXX		= g++

@@ -12,13 +12,8 @@ int main(int argc, char** argv) {
 
 	/* Communication with user */
 
-	cout 	<< "Welcome to the Fast Zeta Transform in Linear Space-based algorithm "
-		<< "to count the number of k-covers of a Set Cover problem instance." 
-		<< endl;
-	cout 	<< "This program is constrained to only handling n < 31 and function "
-		<< "values f < 2^31. Larger values may cause the program to crash." 
-		<< endl << endl;
-
+	cout 	<< "This is k-cover" << endl;
+	
 	int split = -1;
 	
 	if (argc == 3) {
@@ -51,19 +46,7 @@ int main(int argc, char** argv) {
 	k = atoi(argv[2]);			// Number of subsets to use for covering
 
 	/* Validate parameters */
-
-	if (n > 30) {
-		cout	<< "Can't handle n > 30! Now exiting!"
-			<< endl;
-		return 1;
-	}
-
-	if (m > pow(2, n)) {
-		cout	<< "Too many subsets. There can only be 2^n subsets of a n-sized set."
-			<< endl;
-		return 1;
-	}
-
+	
 	if (k > m) {
 		cout	<< "k > |F|. Can not pick more subsets than there are to pick from..."
 			<< endl;
@@ -85,18 +68,25 @@ int main(int argc, char** argv) {
 
 	for (int i = 0; i < m; ++i) {
 		infile >> family[i];
-		f[i] = 1;		// In k-cover, we use F's characteristic function
+		mpz_init(f[i]);
+		mpz_set_ui(f[i], 1);		// In k-cover, we use F's characteristic function
 	}
 
 	/* Initialize algorithm variables */
 
-	rval_t ck = 0;				// Number of k-covers.
+	rval_t ck;				// Number of k-covers.
+	mpz_init(ck);
 	int_t n1, n2;				// Split of n
 
 	/* Splitting n according to input decision */
 
 	utils::pick_n2(n1, n2, m, n, split);
-	
+
+	cout	<< "Parameters: " << endl
+		<< "n: " << n << endl
+		<< "|F|: " << m << endl
+		<< "k: " << k << endl;
+
 	cout	<< "n1 = "	<< n1
 		<< ", n2 = "	<< n2
 		<< endl;
@@ -111,7 +101,7 @@ int main(int argc, char** argv) {
 	// Special case k = 1
 	if (k == 1) {
 		if (utils::count_1bits(family[m - 1]) == n) {
-			ck = 1;
+			mpz_set_ui(ck, 1);
 		}
 	} else
 		utils::fast_zeta_transform_linear_space(n1, n2, &family, &f, k, &ck);

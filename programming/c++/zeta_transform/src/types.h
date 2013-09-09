@@ -1,8 +1,10 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <gmp.h>
+
 typedef int int_t;
-typedef int rval_t;
+typedef mpz_t rval_t;
 
 template <class T>
 class PointerList {
