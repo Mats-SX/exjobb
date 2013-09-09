@@ -12,12 +12,7 @@ int main(int argc, char** argv) {
 
 	/* Communication with user */
 
-	cout 	<< "Welcome to the Fast Zeta Transform in Linear Space-based algorithm "
-		<< "to count the number of k-partitions of a Set Cover problem instance." 
-		<< endl;
-	cout 	<< "This program is constrained to only handling n < 31 and function "
-		<< "values f < 2^31. Larger values may cause the program to crash." 
-		<< endl << endl;
+	cout 	<< "This is k-partition." << endl;
 
 	int split = -1;
 	if (argc == 3) {
@@ -30,7 +25,7 @@ int main(int argc, char** argv) {
 			<< "Any other value (or none provided) falls to default."
 			<< endl
 			<< "0 means n1 = n2 = n/2."	<< endl
-			<< "1 means n1 = n, n2 = 0."	<< endl
+			<< "1 means n1 = n - 1, n2 = 1."<< endl
 			<< "2 means n1 = 1, n2 = n-1."	<< endl
 			<< "Default means n2 = ceil(log2(|F|)), n1 = n-n2."
 			<< endl
@@ -51,23 +46,12 @@ int main(int argc, char** argv) {
 
 	/* Validate parameters */
 
-	if (n > 30) {
-		cout	<< "Can't handle n > 30! Now exiting!"
-			<< endl;
-		return 1;
-	}
-
-	if (m > pow(2, n)) {
-		cout	<< "Too many subsets. There can only be 2^n subsets of a n-sized set."
-			<< endl;
-		return 1;
-	}
-
 	if (k > m) {
 		cout	<< "k > |F|. Can not pick more subsets than there are to pick from..."
 			<< endl;
 		return 1;
 	}
+
 	/* Initialize data structures */
 
 	// The set family F
@@ -85,23 +69,20 @@ int main(int argc, char** argv) {
 		// For k-partitioning, the function f(X)=z^p is a monomial of 
 		// degree p equal to the size of the set, ie p = |X|, for X in F.
 		int degree = utils::count_1bits(family[i]);
-		Polynomial p(n);
-		p.set_coeff_of_degree_to(degree, 1);
-		f[i] = p;
-
-		// DEBUG:
-		//cout << "input p: " << p << endl;
+		f[i].set_degree(n);
+		mpz_set_ui((f[i])[degree], 1);
 	}
 
 	/* Initialize algorithm variables */
 
 	// Polynomial whose n-degree coefficient is the number of k-partitions
-	Polynomial dk(n);
+	Polynomial dk;
+	dk.set_degree(n);
 	int_t n1, n2;			// Split of n
 
 	/* Splitting n according to input decision */
 
-	utils::pick_n2(&n1, &n2, m, n, split);
+	utils::pick_n2(n1, n2, m, n, split);
 	
 	cout	<< "n1 = "	<< n1
 		<< ", n2 = "	<< n2
@@ -120,9 +101,9 @@ int main(int argc, char** argv) {
 	
 	cout	<< "===================="
 		<< endl
-		<< "Nbr of k-partitions: " << dk.get_coeff_of_degree(n) 
+		<< "# k-partitions: " << dk[n] 
 		<< endl
-		<< "Note: Different orderings are also counted."
+		<< "Note: Not sure whether different orderings are counted or not..."
 		<< endl;
 
 	return 0;

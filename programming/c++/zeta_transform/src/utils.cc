@@ -78,7 +78,7 @@ void utils::fast_zeta_transform_linear_space(
 
 		// {{ For each Y2 in U2, set g(Y2) <- 0 }}
 		for (int_t i = 0; i < two_to_the_n2; ++i) {
-			g[i] = 0;	// We just initialize a 0-vector of size 2^n2.
+			g[i].set_degree(n1 + n2);	// We just initialize a 0-vector of size 2^n2.
 					// I see no need to map these values to specific
 					// indices, but instead we make sure we
 					// access the proper value when using g.
@@ -122,6 +122,8 @@ void utils::fast_zeta_transform_linear_space(
 				cout << "y & u2: " << (y & u2) << " = " << bitset<7>(y & u2) << endl;
 				cout << "(y&u2)/2^n1: " << ((y & u2) / two_to_the_n1) << " = "
 					<< bitset<7>(((y & u2) / two_to_the_n1)) << endl;
+				
+				cout << "g[i] = " << g[(y & u2) / two_to_the_n1] << endl;
 				cout << "f(" << i << ") = " << (*f)[i] << endl;
 				*/
 
