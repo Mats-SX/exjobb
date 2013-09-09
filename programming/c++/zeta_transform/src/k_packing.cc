@@ -16,12 +16,7 @@ int main(int argc, char** argv) {
 
 	/* Communication with user */
 
-	cout 	<< "Welcome to the Fast Zeta Transform in Linear Space-based algorithm "
-		<< "to count the number of k-packings of a Set Cover problem instance." 
-		<< endl;
-	cout 	<< "This program is constrained to only handling n < 31 and function "
-		<< "values f < 2^31. Larger values may cause the program to crash." 
-		<< endl << endl;
+	cout 	<< "This is k-packing."	<< endl;
 
 	int split_decision = -1;
 	if (argc == 3) {
@@ -55,23 +50,12 @@ int main(int argc, char** argv) {
 
 	/* Validate parameters */
 
-	if (n > 30) {
-		cout	<< "Can't handle n > 30! Now exiting!"
-			<< endl;
-		return 1;
-	}
-
-	if (m > pow(2, n)) {
-		cout	<< "Too many subsets. There can only be 2^n subsets of a n-sized set."
-			<< endl;
-		return 1;
-	}
-
 	if (k > m) {
 		cout	<< "k > |F|. Can not pick more subsets than there are to pick from..."
 			<< endl;
 		return 1;
 	}
+
 	/* Initialize data structures */
 
 	// The set family F
@@ -105,7 +89,7 @@ int main(int argc, char** argv) {
 
 	/* Splitting n according to input decision */
 
-	utils::pick_n2(&n1, &n2, m, n, split_decision);
+	utils::pick_n2(n1, n2, m, n, split_decision);
 	
 	cout	<< "n1 = "	<< n1
 		<< ", n2 = "	<< n2
