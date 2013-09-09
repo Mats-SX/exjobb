@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include "utils.h"
 #include "types.h"
+#include <gmp.h>
 
 using namespace std;
 
@@ -73,9 +74,8 @@ int main(int argc, char** argv) {
 		// For k-partitioning, the function f(X)=z^p is a monomial of 
 		// degree p equal to the size of the set, ie p = |X|, for X in F.
 		int_t degree = utils::count_1bits(family[i]);
-		Polynomial p(n);
-		p.set_coeff_of_degree_to(degree, 1);
-		f[i] = p;
+		f[i].set_degree(degree);
+		mpz_set_ui(f[i][degree], 1);
 
 		// DEBUG:
 		//cout << "input p: " << p << endl;
@@ -84,7 +84,8 @@ int main(int argc, char** argv) {
 	/* Initialize algorithm variables */
 
 	// Polynomial whose n-degree coefficient is the number of k-packings
-	Polynomial pk(n);
+	Polynomial pk;
+	pk.set_degree(n);
 	int_t n1, n2;			// Split of n
 
 	/* Splitting n according to input decision */
@@ -109,7 +110,7 @@ int main(int argc, char** argv) {
 	
 	cout	<< "===================="
 		<< endl
-		<< "Nbr of k-packings: " << pk.get_coeff_of_degree(n) 
+		<< "Nbr of k-packings: " << pk[n] 
 		<< endl
 		<< "Note: Different orderings are also counted."
 		<< endl;

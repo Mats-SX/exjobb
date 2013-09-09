@@ -3,6 +3,7 @@
 #include "types.h"
 #include <iostream>
 #include <bitset>
+#include <gmp.h>
 
 using namespace std;
 
@@ -75,7 +76,7 @@ void utils::fast_zeta_transform_linear_space(
 		//cout << "x1: " << x1 << " = " << bitset<7>(x1) << endl;
 		// {{ For each Y2 in U2, set g(Y2) <- 0 }}
 		for (int_t i = 0; i < two_to_the_n2; ++i) {
-			g[i] = 0;	// We just initialize a 0-vector of size 2^n2.
+			g[i].set_degree(n1 + n2);	// We just initialize a 0-vector of size 2^n2.
 					// I see no need to map these values to specific
 					// indices, but instead we make sure we
 					// access the proper value when using g.
@@ -157,9 +158,10 @@ void utils::fast_zeta_transform_linear_space(
 			int_t size_of_X = count_1bits(x);
 
 			g[i].raise_to_the(k);
-			Polynomial p(n1 + n2);
-			p.set_coeff_of_degree_to(0, 1);
-			p.set_coeff_of_degree_to(1, 1);		// p = 1 + z
+			Polynomial p;
+			p.set_degree(n1 + n2);
+			mpz_set_ui(p[0], 1);
+			mpz_set_ui(p[1], 1);		// p = 1 + z
 			p.raise_to_the(size_of_X);
 			p *= power_of_minus_one(n1 + n2 - size_of_X);
 			g[i] *= p;
