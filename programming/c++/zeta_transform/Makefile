@@ -23,7 +23,7 @@ BIN		= $(HOME)/bin/
 
 # Programs
 PRGS		= k_cover
-OBJS		= types.o utils.o k_cover.o 
+OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
@@ -40,7 +40,7 @@ clean:
 	$(RM) $(OBJS)
 
 cleaner: clean
-	$(RM) $(DFILES)
+	$(RM) $(VPATH)*.d
 
 cleanest: cleaner
 	$(RM) $(BIN)* $(VPATH)*~
