@@ -43,7 +43,7 @@ cleaner: clean
 	$(RM) $(VPATH)*.d
 
 cleanest: cleaner
-	$(RM) $(BIN)*
+	$(RM) $(BIN)* $(VPATH)*~ $(HOME)*~
 
 # Linking
 instance_creator: instance_creator.o
