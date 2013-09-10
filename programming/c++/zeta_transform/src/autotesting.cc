@@ -57,6 +57,8 @@ int main(int argc, char** argv) {
 			cout << "User time used: " << (ut - old_ut) << endl;
 			cout << "System time used: " << (st - old_st) << endl;
 			cout << "Total time used: " << (st + ut - old_ut - old_st) << endl;
+			
+			cout << "#####################" << endl;
 		}
 
 	}
