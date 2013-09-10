@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
 	
 	cout	<< "===================="
 		<< endl
-		<< "Nbr of k-covers: " << ck 
+		<< "Nbr of k-covers: ~10^" << mpz_sizeinbase(ck, 10) 
 		<< endl
 		<< "Note: Different orderings and multiple pickings (if applicable) are also counted."
 		<< endl;
