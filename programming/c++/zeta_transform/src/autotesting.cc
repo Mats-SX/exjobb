@@ -33,13 +33,13 @@ int main(int argc, char** argv) {
 			infile >> arg;
 			
 			stringstream cmd;
-			cmd 	<< prg << " "
-				<< k << " input/"
-				<< arg;
+			cmd 	<< prg << " input/"
+				<< arg << " "
+				<< k; 
 
 			cout << "Now running: " << cmd.str() << endl;
 			
-			getrusage(RUSAGE_SELF, &usage);
+			getrusage(RUSAGE_CHILDREN, &usage);
 			double old_ut = (double) usage.ru_utime.tv_sec +
 				(double) usage.ru_utime.tv_usec / 1000000.0;
 			double old_st = (double) usage.ru_stime.tv_sec + 
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 						
 			system(cmd.str().c_str());
 
-			getrusage(RUSAGE_SELF, &usage);
+			getrusage(RUSAGE_CHILDREN, &usage);
 			
 			double ut = (double) usage.ru_utime.tv_sec + 
 				(double) usage.ru_utime.tv_usec / 1000000.0;
