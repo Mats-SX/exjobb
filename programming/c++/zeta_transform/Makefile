@@ -16,7 +16,7 @@ CPPFLAGS += -O2
 endif
 
 # Paths
-HOME		= .
+HOME		= ./
 VPATH		= $(HOME)/src/
 BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
