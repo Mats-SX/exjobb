@@ -1,6 +1,6 @@
 
 # le debug options
-DEBUG = false
+DEBUG = true
 
 # le flags >_<
 CXX		= g++
@@ -12,7 +12,7 @@ ifeq ($(DEBUG), true)
 CPPFLAGS += -ggdb
 LDFLAGS += -ggdb
 else
-CPPFLAGS += -O2
+CPPFLAGS += -O3
 endif
 
 # Paths
