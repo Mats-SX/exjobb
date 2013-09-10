@@ -27,7 +27,6 @@ void utils::fast_zeta_transform_exp_space(int_t n, rval_list_t* f) {
 			index += step;
 			for (int_t i = 0; i < step; ++i) {
 				mpz_add((*f)[index], (*f)[index], (*f)[index - step]);
-//				(*f)[index] += (*f)[index - step];
 				++index;
 			}
 		}
@@ -51,9 +50,7 @@ void utils::fast_zeta_transform_linear_space(
 		int_t n1,
 		int_t n2,
 		int_list_t* family,
-		rval_list_t* f,
-		int_t k,
-		rval_t* ck)
+		rval_list_t* f)
 {
 
 	// Variables we only want to calculate once
@@ -66,23 +63,15 @@ void utils::fast_zeta_transform_linear_space(
 	// Function g
 	rval_list_t g(two_to_the_n2);
 
-	// DEBUG
-	//cout << "NOW STARTING THE MAIN LOOP" << endl << endl;
-
 	// Thanks to our constraint on the ordering of F, we can know for sure
 	// that the subsets X1 of U1 are the first 2^n1 subsets in F
 	// {{ For each subset X1 of U1, do }}
 	for (int_t x1 = 0; x1 < two_to_the_n1; ++x1) {
 		// x1 is index of X1, but we do not handle X1 explicitly.
 		
-		//DEBUG
-		//cout << "x1: " << x1 << " = " << bitset<7>(x1) << endl;
-
-
 		// {{ For each Y2 in U2, set g(Y2) <- 0 }}
 		for (int_t i = 0; i < two_to_the_n2; ++i) {
-			mpz_init(g[i]);
-			//g[i] = 0;	// We just initialize a 0-vector of size 2^n2.
+			mpz_init(g[i]);	// We just initialize a 0-vector of size 2^n2.
 					// I see no need to map these values to specific
 					// indices, but instead we make sure we
 					// access the proper value when using g.
@@ -91,9 +80,6 @@ void utils::fast_zeta_transform_linear_space(
 		// {{ For each Y in F, if YnU1 is a subset of X1, then set g(YnU2) <- g(YnU2) + f(Y) }}
 		for (int_t i = 0; i < family->size; ++i) {
 			int_t y = (*family)[i];
-
-			//DEBUG
-			//cout << "y: " << y << " = " << bitset<7>(y) << endl;
 
 			// {{ if YnU1 is a subset of X1 }}
 			// with index math: since u1 is all-ones for elements in U1,
@@ -105,14 +91,6 @@ void utils::fast_zeta_transform_linear_space(
 			// doesn't, (y & u1) | x1 will be a larger number than x1.
 			if (((y & u1) | x1) <= x1) {
 				
-				// DEBUG
-				//cout << "y: " << y << " = " << bitset<7>(y)
-				//     << ", u1: " << u1 << " = " << bitset<7>(u1)
-				  //   << ", x1: " << x1 << " = " << bitset<7>(x1)
-				    // << endl;
-				//cout << "y & u1 was subset of x1?" << endl;
-
-
 				// Since g contains all subsets of U2 in increasing
 				// order of index, but indices of subsets of U2 doesn't
 				// (generally) come at a distance of 1 from eachother, 
@@ -120,18 +98,8 @@ void utils::fast_zeta_transform_linear_space(
 				// g doesn't contain "holes", we normalize the distances
 				// to 1 like this.
 				
-				//DEBUG
-				//cout << "This is y & u2: " << (y & u2) << endl;
-				/*cout << endl;
-				cout << "y & u2: " << (y & u2) << " = " << bitset<7>(y & u2) << endl;
-				cout << "(y&u2)/2^n1: " << ((y & u2) / two_to_the_n1) << " = "
-					<< bitset<7>(((y & u2) / two_to_the_n1)) << endl;
-				cout << "f(" << i << ") = " << (*f)[i] << endl;
-				*/
-				
 				mpz_add(g[(y & u2) / two_to_the_n1], 
 					g[(y & u2) / two_to_the_n1], (*f)[i]); 
-//				g[(y & u2) / two_to_the_n1] += (*f)[i];
 			}
 		}
 		
@@ -155,35 +123,10 @@ void utils::fast_zeta_transform_linear_space(
 		for (int_t i = 0; i < two_to_the_n2; ++i) {
 			int_t x2 = i * two_to_the_n1;
 			int_t x = x1 | x2;
-
-			// To print zeta transform fS of f
 			
-			/*
-			cout << "fS(" << bitset<30>(x) 
-				<< " = " << x 
-				<< "): " << g[i] << endl;
-			*/			
-
-			// Calculating k-cover
-			int_t size_of_U_minus_X = n1 + n2 - count_1bits(x);
-			mpz_pow_ui(g[i], g[i], k);
-			mpz_mul_si(g[i], g[i], power_of_minus_one(size_of_U_minus_X));
-			mpz_add((*ck), (*ck), g[i]);
-//			(*ck) += power_of_minus_one(size_of_U_minus_X) * pow(g[i], k);
-
-
-			// DEBUG
-			/*
-			cout << "x: " << bitset<10>(x) << " = " << x << endl;
-			cout << "1s in x: " << count_1bits(x) << endl;
-			cout << "|U \\ X| = " << size_of_U_minus_X << endl;
-			cout << "-1? " << power_of_minus_one(size_of_U_minus_X) << endl;
-			cout << "(fS(x)=" << g[i] << ")^" << k << " = " << pow(g[i], k) << endl;
-			cout << *ck << endl;
-			*/
+			/* g[i] is fS(x) */
 		}
 	}
-	
 
 	return;
 }
@@ -232,15 +175,6 @@ int_t utils::count_1bits(int i) {
 	i = i - ((i >> 1) & 0x55555555);
 	i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
 	return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
-}
-
-int_t utils::count_1bits(long long i) {
-	// hmmm
-}
-
-/* For the GMP type... */
-int_t utils::count_1bits( /* ... */ ) {
-	// hmmm
 }
 
 /*

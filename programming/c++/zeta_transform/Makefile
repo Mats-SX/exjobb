@@ -22,7 +22,7 @@ BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= k_cover
+PRGS		= fztlin
 OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
@@ -46,7 +46,7 @@ cleanest: cleaner
 	$(RM) $(BIN)* $(VPATH)*~
 
 # Linking
-k_cover: k_cover.o utils.o types.o
+fztlin: fztlin.o utils.o types.o
 
 include $(DFILES)
 

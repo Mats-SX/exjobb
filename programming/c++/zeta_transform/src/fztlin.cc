@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include "types.h"
 #include "utils.h"
+#include <gmp.h>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ int main(int argc, char** argv) {
 
 	/* Communication with user */
 
-	cout 	<< "This is k-cover" << endl;
+	cout 	<< "This is Fast Zeta Transform in linear space" << endl;
 	
 	int split = -1;
 	
@@ -43,15 +44,6 @@ int main(int argc, char** argv) {
 	int_t n, m, k;
 	infile >> n;				// Universe range
 	infile >> m;				// Number of subsets in family F
-	k = atoi(argv[2]);			// Number of subsets to use for covering
-
-	/* Validate parameters */
-	
-	if (k > m) {
-		cout	<< "k > |F|. Can not pick more subsets than there are to pick from..."
-			<< endl;
-		return 1;
-	}
 
 	/* Initialize data structures */
 
@@ -69,13 +61,13 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < m; ++i) {
 		infile >> family[i];
 		mpz_init(f[i]);
-		mpz_set_ui(f[i], 1);		// In k-cover, we use F's characteristic function
+		int_t tmp;
+		infile >> tmp;
+		mpz_set_ui(f[i], tmp);
 	}
 
 	/* Initialize algorithm variables */
 
-	rval_t ck;				// Number of k-covers.
-	mpz_init(ck);
 	int_t n1, n2;				// Split of n
 
 	/* Splitting n according to input decision */
@@ -93,28 +85,15 @@ int main(int argc, char** argv) {
 
 	/* Run the algorithm! */
 
-	cout	<< "Calculating k-cover!"
+	cout	<< "Transforming!"
 		<< endl
 		<< "===================="
 		<< endl;
 
-	// Special case k = 1
-	if (k == 1) {
-		if (utils::count_1bits(family[m - 1]) == n) {
-			mpz_set_ui(ck, 1);
-		}
-	} else
-		utils::fast_zeta_transform_linear_space(n1, n2, &family, &f, k, &ck);
+	utils::fast_zeta_transform_linear_space(n1, n2, &family, &f);
 
-	/* Output */
-	
 	cout	<< "===================="
-		<< endl
-		<< "Nbr of k-covers: " << ck 
-		<< endl
-		<< "Note: Different orderings and multiple pickings (if applicable) are also counted."
 		<< endl;
 
 	return 0;
-
 }
