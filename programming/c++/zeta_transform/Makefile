@@ -1,6 +1,6 @@
 
 # le debug options
-DEBUG = false
+DEBUG = true
 
 # le flags >_<
 CXX		= g++
@@ -22,7 +22,7 @@ BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= instance_creator
+PRGS		= autotesting
 OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
@@ -46,7 +46,7 @@ cleanest: cleaner
 	$(RM) $(BIN)* $(VPATH)*~ $(HOME)*~
 
 # Linking
-instance_creator: instance_creator.o
+autotesting: autotesting.o
 
 include $(DFILES)
 
