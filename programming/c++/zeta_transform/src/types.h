@@ -1,10 +1,10 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include "polynomial.h"
+#include <gmp.h>
 
 typedef int int_t;
-typedef short rval_t;
+typedef mpz_t rval_t;
 
 template <class T>
 class PointerList {

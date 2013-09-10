@@ -1,6 +1,6 @@
 
 # le debug options
-DEBUG = false
+DEBUG = true
 
 # le flags >_<
 CXX		= g++
@@ -22,7 +22,7 @@ BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= instance_creator
+PRGS		= k_cover
 OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
@@ -43,10 +43,10 @@ cleaner: clean
 	$(RM) $(VPATH)*.d
 
 cleanest: cleaner
-	$(RM) $(BIN)*
+	$(RM) $(BIN)* $(VPATH)*~
 
 # Linking
-instance_creator: instance_creator.o
+k_cover: k_cover.o utils.o types.o
 
 include $(DFILES)
 
