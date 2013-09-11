@@ -17,9 +17,43 @@
 \maketitle
 
 \section{Introduction}
-In this text, I will present some results from my work in the form of benchmarks for a few variations of the algorithms examined in this Master's Thesis. The core of the algorithm is the Fast Zeta Transform in Linear Space, see \ref{fztlin}, which makes the algorithms look very much alike. The algorithm is presented in this paper in three versions, each solving a problem from the Set Cover family of NP-complete problems [citation needed]. These are $k$-cover, $k$-partition and $k$-packing, further explained below.
+In this text, I will present some results from my work in the form of benchmarks for a few variations of the algorithms examined in this Master's Thesis. The core of the algorithm is the Fast Zeta Transform in Linear Space, see \ref{fztlin}, which makes the algorithms look very much alike. The algorithm is presented in this paper in three versions, each solving a well-known algorithmical problem. These are $k$-cover, $k$-partition and $k$-packing, further explained below.
 
 One question that this test seeks to answer, or at least make an indication toward an answer for, is whether the complexity of the arithmetics performed with polynomials in the partition and packing problems is a significant time-consuming part of the algorithm. That is, would it be worthwhile to represent the polynomials in a non-explicit way in order to perform faster multiplication and addition? In this text, I have provided two different alternatives to polynomial representation (and arithmetics).
+
+\section{Problem statements}
+
+\subsection{Fast Zeta Transform}
+Given a universe $U = \{1, 2, \ldots, n\}$ of integers, a family $\mathcal{F}$ of subsets of $U$ and a function $f: \mathcal{F} \rightarrow R$, where $R$ is an algebraic ring, output the number of ways to pick $k$ members of $\mathcal{F}$ such that their union equals $U$.
+
+For a detailed description of the algorithm, see Björklund et al \cite{cov_pack}.
+
+\subsection{$k$-cover}
+Given a universe $U = \{1, 2, \ldots, n\}$ of integers, a family $\mathcal{F}$ of subsets of $U$ and an integer $k$, output $c_k(\mathcal{F})$, which is the number of ways to pick $k$ members of $\mathcal{F}$ such that their union equals $U$.
+
+\textbf{Solution:} Set $f$ as the characteristic function of $\mathcal{F}$ ($f = 1$ for each $Y \in \mathcal{F}$) and calculate its FZT $f\zeta$. Then get $c_k$ as
+
+$$
+c_k = \sum_{X\subseteq U} (-1)^{|U \setminus X|}f\zeta(X)^k
+$$
+
+\subsection{$k$-partition}
+Given a universe $U = \{1, 2, \ldots, n\}$ of integers, a family $\mathcal{F}$ of subsets of $U$ and an integer $k$, output $d_k^n(\mathcal{F})$, which is the number of ways to pick $k$ pairwise disjoint members of $\mathcal{F}$ such that their union equals $U$.
+
+\textbf{Solution:} Set $f(Y) = z^{|Y|}$ for each $Y \in \mathcal{F}$. Calculate $f\zeta$ and get $d_k^n$ as the coefficient of $z^n$ in
+
+$$
+d_k = \sum_{X\subseteq U} (-1)^{|U \setminus X|}f\zeta(X)^k
+$$
+
+\subsection{$k$-packing}
+Given a universe $U = \{1, 2, \ldots, n\}$ of integers, a family $\mathcal{F}$ of subsets of $U$ and an integer $k$, output $p_k^n(\mathcal{F})$, which is the number of ways to pick $k$ pairwise disjoint members of $\mathcal{F}$.
+
+\textbf{Solution:} With the insight that a $k$-packing is indeed a $(k+1)$-partition with the $(k+1)$:th member being an arbitrary subset of $U$ (all the remaining elements in $U$), we set $f$ as we did with $k$-partition and get $p_k^n$ as the coefficient of $z^n$ in
+
+$$
+p_k = \sum_{X\subseteq U} (-1)^{|U \setminus X|} (1+z)^{|X|} f\zeta(X)^k
+$$
 
 \section{Fast Zeta Transform in Linear Space} \label{fztlin}
 The core of the algorithm is the Fast Zeta Transform (FZT) in Linear Space, presented by Björklund et al in \cite{cov_pack}. The FZT is directly translated into a solution for the three problems mentioned above, by a simple line of summation. But we perform tests on this core also, and try to determine its alleged linear increase in complexity as $|\mathcal{F}|$ increases.
