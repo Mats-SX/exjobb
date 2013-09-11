@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include "types.h"
 #include "utils.h"
+#include <unistd.h>
 
 using namespace std;
 
@@ -115,6 +116,7 @@ int main(int argc, char** argv) {
 		<< "Note: Different orderings and multiple pickings (if applicable) are also counted."
 		<< endl;
 
+	pause();
 	return 0;
 
 }
