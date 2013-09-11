@@ -6,6 +6,7 @@
 #include "types.h"
 #include "utils.h"
 #include <unistd.h>
+#include <signal.h>
 
 using namespace std;
 
@@ -117,7 +118,7 @@ int main(int argc, char** argv) {
 		<< endl;
 
 	cout << "Now pausing for collection of statistics" << endl;
-	pause();
+	raise(SIGSTOP);	
 	return 0;
 
 }
