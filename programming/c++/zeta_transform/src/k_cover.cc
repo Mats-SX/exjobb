@@ -116,6 +116,7 @@ int main(int argc, char** argv) {
 		<< "Note: Different orderings and multiple pickings (if applicable) are also counted."
 		<< endl;
 
+	cout << "Now pausing for collection of statistics" << endl;
 	pause();
 	return 0;
 
