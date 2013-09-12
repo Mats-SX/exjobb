@@ -5,6 +5,9 @@
 #include "polynomial.h"
 #include "utils.h"
 #include "types.h"
+#include <signal.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -101,10 +104,15 @@ int main(int argc, char** argv) {
 	
 	cout	<< "===================="
 		<< endl
-		<< "# k-partitions: " << dk[n] 
+		<< "# k-partitions: ~10^" << mpz_sizeinbase(dk[n], 10) 
 		<< endl
 		<< "Note: Not sure whether different orderings are counted or not..."
 		<< endl;
+
+	cout << endl;
+	cout << "Now pausing for collection of statistics. PID is " << getpid() << endl;
+	cout << "Kill me with 'kill -s 9 <PID>' if necessary." << endl;
+	raise(SIGSTOP);
 
 	return 0;
 }
