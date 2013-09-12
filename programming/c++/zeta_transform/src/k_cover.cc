@@ -7,6 +7,8 @@
 #include "utils.h"
 #include <unistd.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -117,8 +119,10 @@ int main(int argc, char** argv) {
 		<< "Note: Different orderings and multiple pickings (if applicable) are also counted."
 		<< endl;
 
-	cout << "Now pausing for collection of statistics" << endl;
-	raise(SIGSTOP);	
+	cout << endl;
+	cout << "Now pausing for collection of statistics. PID is " << getpid() << endl;
+	cout << "Kill me with 'kill -s 9 <PID>' if necessary" << endl;
+	raise(SIGSTOP);
 	return 0;
 
 }
