@@ -16,9 +16,9 @@ CPPFLAGS += -O3
 endif
 
 # Paths
-HOME		= .
-VPATH		= $(HOME)/src/
-BIN		= $(HOME)/bin/
+HOME		= ./
+VPATH		= $(HOME)src/
+BIN		= $(HOME)bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
@@ -43,7 +43,7 @@ cleaner: clean
 	$(RM) $(VPATH)*.d
 
 cleanest: cleaner
-	$(RM) $(BIN)* $(VPATH)*~
+	$(RM) $(VPATH)*~ $(HOME)*~
 
 # Linking
 k_cover: k_cover.o utils.o types.o
