@@ -73,7 +73,14 @@ void process_mem_usage(
 }
 
 
-
+/*
+ * Input file format:
+ * <path to executable> <nbr of rows to follow>
+ * <k> <nbr of values to follow> <file#1> <file#2> ... <file#n>
+ * ...
+ *
+ *
+ */
 int main(int argc, char** argv) {
 	
 	cout << "This is autotesting." << endl;
@@ -85,8 +92,6 @@ int main(int argc, char** argv) {
 
 	int rows;
 	infile >> rows;
-
-	rusage usage;			// Same pointer for all tests
 
 	for (int i = 0; i < rows; ++i) {
 		int k;
