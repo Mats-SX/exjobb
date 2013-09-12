@@ -57,7 +57,12 @@ int main(int argc, char** argv) {
 			cout << "Now generating instance ..." << endl;
 
 			stringstream outfile;
-			outfile << "input/kp_" << n << "_" << df;
+			outfile << "input/";
+			if (rvals)
+				outfile << "f";
+			else 
+				outfile << "k";
+			outfile << "p_" << n << "_" << df;
 			ofstream ofs(outfile.str().c_str());
 	
 			set<mpz_class> pool;
