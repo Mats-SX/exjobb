@@ -17,8 +17,8 @@ endif
 
 # Paths
 HOME		= ./
-VPATH		= $(HOME)/src/
-BIN		= $(HOME)/bin/
+VPATH		= $(HOME)src/
+BIN		= $(HOME)bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
@@ -43,7 +43,7 @@ cleaner: clean
 	$(RM) $(VPATH)*.d
 
 cleanest: cleaner
-	$(RM) $(BIN)* $(VPATH)*~ $(HOME)*~
+	$(RM) $(VPATH)*~ $(HOME)*~
 
 # Linking
 autotesting: autotesting.o
