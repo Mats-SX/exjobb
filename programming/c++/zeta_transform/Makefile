@@ -22,7 +22,6 @@ BIN		= $(HOME)bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		=
 OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
