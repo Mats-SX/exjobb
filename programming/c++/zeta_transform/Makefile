@@ -12,7 +12,7 @@ ifeq ($(DEBUG), true)
 CPPFLAGS += -ggdb
 LDFLAGS += -ggdb
 else
-CPPFLAGS += -O2
+CPPFLAGS += -O3
 endif
 
 # Paths
@@ -22,7 +22,7 @@ BIN		= $(HOME)bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= instance_creator
+PRGS		=
 OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
@@ -43,10 +43,9 @@ cleaner: clean
 	$(RM) $(VPATH)*.d
 
 cleanest: cleaner
-	$(RM) $(BIN)* $(VPATH)*~ $(HOME)*~
+	$(RM) $(VPATH)*~ $(HOME)*~
 
 # Linking
-instance_creator: instance_creator.o
 
 include $(DFILES)
 
