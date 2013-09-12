@@ -28,19 +28,19 @@ int main(int argc, char** argv) {
 	bool rvals;
 	infile >> nbr_of_lines;
 	infile >> rvals;
-	char* c_str = new char[50];
+	char* c_str = new char[100];
 	infile.getline(c_str, 50);	// Get rid of the newline
 
 	for (int i = 0; i < nbr_of_lines; ++i) {
-		infile.getline(c_str, 50);	// The line is not supposed to be larger than 50 tokens
+		infile.getline(c_str, 100);	// The line is not supposed to be larger than 50 tokens
 		string line(c_str);
 		istringstream s(line);
 		
 		mpz_class n, df;
 		s >> n;
 		
-		while (!s.eof()) {
-			s >> df;
+		while (s >> df) {
+			//s >> df;
 
 			/* Tell user what's been read */
 			
