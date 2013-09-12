@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{times}
 \usepackage{amssymb}
+\usepackage{amsmath}
 \usepackage{wasysym}
 \newcommand{\code}{\texttt}
 
@@ -67,14 +68,31 @@ How to handle polynomial representation is an open question, relevant for $k$-pa
 \section{First implications and limitations}
 My initial idea was to test many things. Too many, I soon realized, as some simple calculations showed that I would need over a hundred graphs to present the results. This is of course infeasible due to lack of space and time (no pun intended). So, instead of allowing both \code{std::vector}- and pointer-based list structures, I will resort to only keep pointer-based lists. Although it would be interesting to see whether \code{std::vector} provides a lot of overhead for large structures, this will have to be deduced elsewhere.
 
-There are two kinds of integer types used in my program. First there are the index variables for my list structures. They need to be large enough to hold all of the members of $\mathcal{F}$. Since $|\mathcal{F}|$ grows as $O(2^n)$, it is the size of $n$ that sets the limitation on our index variables. For convenience, I choose to let my program support $n < 31$, allowing me to use a standard 32-bit sized integer. For the instances provided here, maximum input size is $\sim 10^6$ lines, which means that for $n=30$ our maximum density of subsets is around 1\permil. For $n<21$, there is no limitation on subset density.
+There are two kinds of integer types used in my program. First there are the index variables for my list structures. They need to be large enough to hold all of the members of $\mathcal{F}$. Since $|\mathcal{F}|$ grows as $O^*(2^n)$, it is the size of $n$ that sets the limitation on our index variables. For convenience, I choose to let my program support $n < 31$, allowing me to use a standard 32-bit sized integer. For the instances provided here, maximum input size is $\sim 10^6$ lines, which means that for $n=30$ our maximum density\footnote{In this paper, the \emph{density} $df$ of $\mathcal{F}$ is defined as $|\mathcal{F}| = df\cdot2^n$.} of subsets is around 1\permil. For $n<21$, there is no limitation on subset density.
 
 Second, there are the summation variables needed to output the solution for the $k$-problems. In order to produce correct results, these do naturally need to be arbitrarily large. My programs uses GMP, the GNU Multiple Precision library \cite{gmp}, to support this. An initial idea was to test also the performance of GMP as compared to any standard data type (such as \code{int}), but as 32 bits is too small even for $n=12$ (for some $k$), this was abandoned. The main reason as to why the sums grow so incredibly fast is due to the fact that the algorithm consider ordering of subsets in a $k$-sized selection to be critical. That is, for $k$ distinct chosen members of $\mathcal{F}$ that solve the problem, there are $k!$ solutions counted.
 
 \subsection{Complexity of arithmetics}
-Since the FZT is running in time $O(2^n)$ and space $O(n)$
+Since the FZT is running in time $O^*(2^n)$ and space $O^*(|\mathcal{F}|)$, so do the $k$-problem algorithms as well, assuming that the arithmetics in the ring $R$ take constant time and that each ring element uses constant space. But what about the summation variables of the $k$-problems? As mentioned, they need to be stored in an arbitrarily large data type, but how large? How fast does it grow and what implications does this have on its use as a term or a factor?
+
+For $k$-cover, we have an integer that in each step of the inner-most loop (there are $O^*(2^n)$ such steps) take the FZT $f\zeta(X)$ for some $ X \in \mathcal{F}$ and raise it to the $k$. The largest possible value of $f\zeta(X)$ is $2^n$. This happens when the density of subsets is at $100\%$ and only for $X=U$ (which has all other sets in $\mathcal{F}$ as subsets). This (and every other) number is taken to the power of $k$. In $k$-cover, a set can be picked more than once for a given selection that solves the problem, leaving us with no bound at all on $k$. This means that the maximum value of the largest term in the sum of $c_k$ is $2^{nk}$, where $k$ may approach $\infty$. In my programs, I have decided to let $k < |\mathcal{F}|$ hold, effectively bounding $k$ by $2^n$. Our maximum term is now $(2^n)^{2^n}$. 
+
+TODO: Not sure where I am going with this... relevance? What's my point? How hard is it exactly to sum with this number? 
 
 \section{Test structure}
+All problem instances are stored in a file named \code{*p\_n\_df} where \code{*} is \code{k} for the $k$-problems and \code{f} for the FZT, \code{n} is the size of $n$ and \code{df} is the density $df$ of $\mathcal{F}$ in parts of thousands (\permil).
+
+My measures are performed by pausing the process just before normal termination and reading from the process' stat file in \code{/proc/[pid]/stat} (see the linux man pages for \code{proc} \cite{proc}). The information gathered is the amount of time used (both user and system time), the peak size of the resident set and the peak virtual memory.
+
+The tests are as follows ($k$ is of course not a parameter for the FZT).
+
+\begin{enumerate}
+ \item Sets $n$ and $k$ constant and varies $df$ over 20 measuring points, from 1$\permil$ to 1000$\permil$.
+ \item Sets $|\mathcal{F}|$ and $k$ constant and varies $n$ (this means $df$ also varies, but that's not relevant) over 7 measuring points, from 14 to 20.
+ \item Sets $n$ and $|\mathcal{F}|$ constant and varies $k$ over 100 measuring points.
+
+\end{enumerate}
+
 
 \subsection{FZT in Linear Space}
 
@@ -85,5 +103,12 @@ Since the FZT is running in time $O(2^n)$ and space $O(n)$
 \subsection{$k$-packing}
 
 \section{Conclusions}
+
+\begin{thebibliography}{9}
+\bibitem{cov_pack} \url{http://fileadmin.cs.lth.se/cs/Personal/Thore_Husfeldt/papers/lsfzt.pdf}
+\bibitem{gmp} \url{http://gmplib.org/}
+\bibitem{proc} \url{http://man7.org/linux/man-pages/man5/proc.5.html}
+\end{thebibliography}
+
 
 \end{document}
