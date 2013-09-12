@@ -12,13 +12,13 @@ ifeq ($(DEBUG), true)
 CPPFLAGS += -ggdb
 LDFLAGS += -ggdb
 else
-CPPFLAGS += -O2
+CPPFLAGS += -O3
 endif
 
 # Paths
-HOME		= .
-VPATH		= $(HOME)/src/
-BIN		= $(HOME)/bin/
+HOME		= ./
+VPATH		= $(HOME)src/
+BIN		= $(HOME)bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
@@ -43,7 +43,7 @@ cleaner: clean
 	$(RM) $(VPATH)*.d
 
 cleanest: cleaner
-	$(RM) $(BIN)* $(VPATH)*~
+	$(RM) $(VPATH)*~ $(HOME)*~
 
 # Linking
 k_partition: k_partition.o utils.o polynomial.o types.o
