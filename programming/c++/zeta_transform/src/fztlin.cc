@@ -6,6 +6,9 @@
 #include "types.h"
 #include "utils.h"
 #include <gmp.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -94,6 +97,11 @@ int main(int argc, char** argv) {
 
 	cout	<< "===================="
 		<< endl;
+	
+	cout << endl;
+	cout << "Now pausing for collection of statistics. PID is " << getpid() << endl;
+	cout << "Kill me with 'kill -s 9 <PID>' if necessary" << endl;
+	raise(SIGSTOP);
 
 	return 0;
 }
