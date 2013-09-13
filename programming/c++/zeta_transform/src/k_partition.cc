@@ -86,7 +86,12 @@ int main(int argc, char** argv) {
 	/* Splitting n according to input decision */
 
 	utils::pick_n2(n1, n2, m, n, split);
-	
+
+	cout	<< "Parameters: " << endl
+		<< "n: " << n << endl
+		<< "|F|: " << m << endl
+		<< "k: " << k << endl;
+
 	cout	<< "n1 = "	<< n1
 		<< ", n2 = "	<< n2
 		<< endl;
