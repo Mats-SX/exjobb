@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
 	
 	cout	<< "===================="
 		<< endl
-		<< "Nbr of k-packings: ~10^" << pk[n] 
+		<< "Nbr of k-packings: " << pk[n] 
 		<< endl
 		<< "Note: Different orderings are also counted."
 		<< endl;
