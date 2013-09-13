@@ -10,7 +10,7 @@
 #include <ios>
 #include <string>
 #include <cstring>
-
+#include <limits>
 using namespace std;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -33,8 +33,11 @@ void process_mem_usage(
 	using std::ifstream;
 	using std::string;
 
-	vm_usage     = 0.0;
-	resident_set = 0.0;
+	vm_usage	= 0.0;
+	resident_set	= 0.0;
+	user_time	= 0.0;
+	system_time	= 0.0;
+	total_time	= 0.0;
 
 	// 'file' stat seems to give the most reliable results
 	//
@@ -75,7 +78,6 @@ void process_mem_usage(
 
 /*
  * Input file format:
- * <path to executable> <nbr of rows to follow>
  * <k> <nbr of values to follow> <file#1> <file#2> ... <file#n>
  * ...
  *
@@ -86,24 +88,47 @@ int main(int argc, char** argv) {
 	cout << "This is autotesting." << endl;
 
 	ifstream infile(argv[1]);	// Read what to test from file
+	
+	string line;
+	do {
+		getline(infile, line);
+	} while (line[0] == '#');
 
+	istringstream iss(line);
+
+	// I have no idea why, but declaring this where I want to declare it 
+	// causes really strange errors....
+	string arg; 
+	
 	string prg;
-	infile >> prg;
+	iss >> prg;
 
 	int rows;
-	infile >> rows;
+	iss >> rows;
+
+	stringstream ss;
+	ss << prg << "_test_res";
+	ofstream out(ss.str().c_str());
 
 	for (int i = 0; i < rows; ++i) {
+		do {
+			getline(infile, line);
+		} while (line[0] == '#');
+		
+		iss.str(line);
+		iss.seekg(0);
+
 		int k;
-		infile >> k;
+		iss >> k;
 	
 		int nbr_of_tests;
-		infile >> nbr_of_tests;
+		iss >> nbr_of_tests;
 
-		for (int j = 0; j < nbr_of_tests; ++j) {
-			string arg;
-			infile >> arg;
-
+		for (int l = 0; l < nbr_of_tests; ++l) {
+			iss >> arg;
+			cout << "arg is (up): " << arg << endl;
+			out	<< arg << " " << k << endl;
+			
 			stringstream cmd;
 			cmd 	<< prg << " input/"
 				<< arg << " "
@@ -142,19 +167,24 @@ int main(int argc, char** argv) {
 			double vm, rss, ut, st, tt;
 			process_mem_usage(pid, vm, rss, ut, st, tt);
 			
-			/* Print stats */
+			/* Print stats to stdout */
 			cout	<< "User time used:\t\t" << (ut) << " ms" 	<< endl
-				<< "System time used:\t" << (st) << " ms"<< endl
+				<< "System time used:\t" << (st) << " ms"	<< endl
 				<< "Total time used:\t" << (tt) << " ms"	<< endl
-				<< "Virtual Memory:\t\t" << vm << " MB"	<< endl
-				<< "Resident set size:\t" << rss << " MB"<< endl;
+				<< "Virtual Memory:\t\t" << vm << " MB"		<< endl
+				<< "Resident set size:\t" << rss << " MB"	<< endl;
+			
+			/* Print stats to outfile */
+			out	<< "ut, st, tt: " << ut << " " << st << " " << tt << endl;
+			out	<< "vm, rss: " << vm << " " << rss << endl;
+
 
 			/* Let's proceed to next test. */
 			
 			cout << "#####################" << endl;
-
 		}
-
 	}
+	out.flush();
+	out.close();
 	return 0;
 }

@@ -4,7 +4,7 @@
 # k2 nbroftestsJ2 testfile1 testfile2 ... testfileJ2
 # ...
 # kI nbroftestsJI testfile1 testfile2 ... testfileJI
-bin/k_cover 106
+bin/k_packing 106
 # test 1, k=100 n=17, df=1...1000
 100 21 kp_17_1 kp_17_50 kp_17_100 kp_17_150 kp_17_200 kp_17_250 kp_17_300 kp_17_350 kp_17_400 kp_17_450 kp_17_500 kp_17_550 kp_17_600 kp_17_650 kp_17_700 kp_17_750 kp_17_800 kp_17_850 kp_17_900 kp_17_950 kp_17_1000
 # test 2, k=100 |F|~=32000
