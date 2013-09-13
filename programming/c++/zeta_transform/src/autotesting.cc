@@ -126,8 +126,8 @@ int main(int argc, char** argv) {
 
 		for (int l = 0; l < nbr_of_tests; ++l) {
 			iss >> arg;
-			cout << "arg is (up): " << arg << endl;
-			out	<< arg << " " << k << endl;
+			
+			out << arg << " " << k << endl;
 			
 			stringstream cmd;
 			cmd 	<< prg << " input/"
@@ -137,7 +137,7 @@ int main(int argc, char** argv) {
 			cout << "Now running: " << cmd.str() << endl;
 
 			char* args[4];
-			char tmp[30];
+			char tmp[35];
 		       	strcpy(tmp, cmd.str().c_str());
 			
 			args[0] = strtok(tmp, " ");

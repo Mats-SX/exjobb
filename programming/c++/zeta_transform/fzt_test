@@ -5,7 +5,7 @@
 # ...
 # kI nbroftestsJI testfile1 testfile2 ... testfileJI
 #
-bin/fzt 106
+bin/fzt_lin 103
 # test 1, k=100 n=17, df=1...1000
 100 21  fp_17_1 fp_17_50 fp_17_100 fp_17_150 fp_17_200 fp_17_250 fp_17_300 fp_17_350 fp_17_400 fp_17_450 fp_17_500 fp_17_550 fp_17_600 fp_17_650 fp_17_700 fp_17_750 fp_17_800 fp_17_850 fp_17_900 fp_17_950 fp_17_1000
 # test 2, k=100 |F|~=32000
