@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
 	
 	cout	<< "===================="
 		<< endl
-		<< "Nbr of k-packings: ~10^" << mpz_sizeinbase(pk[n], 10) 
+		<< "Nbr of k-packings: ~10^" << pk[n] 
 		<< endl
 		<< "Note: Different orderings are also counted."
 		<< endl;
