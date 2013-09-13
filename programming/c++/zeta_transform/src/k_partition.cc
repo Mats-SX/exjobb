@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
 	
 	cout	<< "===================="
 		<< endl
-		<< "# k-partitions: ~10^" << mpz_sizeinbase(dk[n], 10) 
+		<< "# k-partitions: " << dk[n] 
 		<< endl
 		<< "Note: Not sure whether different orderings are counted or not..."
 		<< endl;
