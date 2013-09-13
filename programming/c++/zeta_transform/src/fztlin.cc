@@ -20,25 +20,12 @@ int main(int argc, char** argv) {
 	
 	int split = -1;
 	
-	if (argc == 3) {
-		cout	<< "Using default split." 
-			<< endl;
-	} else if (argc != 4) {
-		cout 	<< "Usage: k_cover <infile> <k> <split_decision>."
-			<< endl;
-		cout	<< "<split_decision> is an integer 0, 1 or 2. "
-			<< "Any other value (or none provided) falls to default."
-			<< endl
-			<< "0 means n1 = n2 = n/2."	<< endl
-			<< "1 means n1 = n, n2 = 0."	<< endl
-			<< "2 means n1 = 1, n2 = n-1."	<< endl
-			<< "Default means n2 = ceil(log2(|F|)), n1 = n-n2."
-			<< endl
-			<< "Now exiting."
+	cout	<< "Using default split." << endl;
+
+	if (argc != 2) {
+		cout 	<< "Usage: fztlin <infile>"
 			<< endl;
 		return 0;
-	} else {
-		split = atoi(argv[3]);
 	}
 
 	/* Read parameters */
