@@ -95,6 +95,11 @@ int main(int argc, char** argv) {
 
 	utils::pick_n2(n1, n2, m, n, split_decision);
 	
+	cout	<< "Parameters: " << endl
+		<< "n: " << n << endl
+		<< "|F|: " << m << endl
+		<< "k: " << k << endl;	
+	
 	cout	<< "n1 = "	<< n1
 		<< ", n2 = "	<< n2
 		<< endl;
