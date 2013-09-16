@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 	
 	cout	<< "Using default split." << endl;
 
-	if (argc != 2) {
+	if (argc < 2) {
 		cout 	<< "Usage: fztlin <infile>"
 			<< endl;
 		return 0;
