@@ -16,7 +16,7 @@
 
 # Don't include binaries. They are giving me a headache.
 bin/
-.class
+*.class
 
 # Dolphin file manager directory files. Not sure what they do
 .directory
