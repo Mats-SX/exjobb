@@ -83,7 +83,12 @@ public class Parser {
 			scan.nextLine();
 			fw_t3.write(k + "\t");
 			fw_m3.write(k + "\t");
+			scanAndWrite(fw_t3, fw_m3, scan);
 		}
+		fw_t3.flush();
+		fw_t3.close();
+		fw_m3.flush();
+		fw_m3.close();
 	}
 
 	public static void scanAndWrite(FileWriter fw1,	
