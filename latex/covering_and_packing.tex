@@ -9,9 +9,10 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{wasysym}
+\usepackage{pgfplots}
 \newcommand{\code}{\texttt}
 
-\title{\huge{Testing k-cover, k-partition and k-packing}}
+\title{\huge{A first test report on simulations of Fast Zeta Transform-based algorithms}}
 
 \author{Mats Rydberg}
 \date{\today}
@@ -79,7 +80,9 @@ For $k$-cover, we have an integer that in each step of the inner-most loop (ther
 
 TODO: Not sure where I am going with this... relevance? What's my point? How hard is it exactly to sum with this number? 
 
-\section{Test structure}
+\section{Test results}
+
+\subsection{Test structure}
 All problem instances are stored in a file named \code{*p\_n\_df} where \code{*} is \code{k} for the $k$-problems and \code{f} for the FZT, \code{n} is the size of $n$ and \code{df} is the density $df$ of $\mathcal{F}$ in parts of thousands (\permil).
 
 My measures are performed by pausing the process just before normal termination and reading from the process' stat file in \code{/proc/[pid]/stat} (see the linux man pages for \code{proc} \cite{proc}). The information gathered is the amount of time used (both user and system time), the peak size of the resident set and the peak virtual memory.
@@ -87,22 +90,392 @@ My measures are performed by pausing the process just before normal termination 
 The tests are as follows ($k$ is of course not a parameter for the FZT).
 
 \begin{enumerate}
- \item Sets $n$ and $k$ constant and varies $df$ over 21 measuring points: $$1\permil, 50\permil, 100\permil, \ldots, 1000\permil$$
- \item Sets $|\mathcal{F}|$ and $k$ constant and varies $n$ (this means $df$ also varies, but that's not relevant) over 11 measuring points: $$15, 16, \ldots, 25$$
- \item Sets $n$ and $|\mathcal{F}|$ constant and varies $k$ over 100 measuring points: $$2, 3, 4, \ldots, 49, 50, 55, 60, \ldots, 145, 150, 160, 170, \ldots, 290, 300, 350, 400, \ldots, 950,$$ $$1000, 2000, 5000$$
+ \item Sets $n = 15$ and $k = 30$ constant and varies $df$ over 21 measuring points: $$1\permil, 50\permil, 100\permil, \ldots, 1000\permil$$
+ \item Sets $|\mathcal{F}| \sim 2^{14}$ and $k = 10$ constant and varies $n$ (this means $df$ also varies, but that's not relevant) over 8 measuring points: $$14, 15, \ldots, 21$$
+ \item Sets $n = 15$ and $df = 100$ constant and varies $k$ over 98 measuring points: $$2, 3, 4, \ldots, 49, 50, 55, 60, \ldots, 145, 150, 160, 170, \ldots, 290, 300, $$ $$350, 400, \ldots, 950, 1000 $$
 
 \end{enumerate}
 
+All time measurements are made with a precision of 10 milliseconds. For time plots, blue circlues show user time and red squares show system time. For memory plots, blue circles show peak resident set size and red squares show peak virtual memory.
 
 \subsection{FZT in Linear Space}
+Test results for ''just'' the Fast Zeta Transform are presented here. Note that this program does not perform actual output of the values of $f\zeta$, but just calculates them and then continues the loop. That is of course the very technique that allows the algorithm to use only linear space.
+
+\subsection*{Test 1}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$df$,
+ylabel=time (ms)]
+\addplot table[x=df,y=time] {../programming/c++/zeta_transform/src/fztlin_time1};
+\addplot table[x=df,y=systime] {../programming/c++/zeta_transform/src/fztlin_time1};
+\end{axis}
+\end{tikzpicture}
+
+Calculating the FZT is really fast and our precision is too low for any interesting results for this test.
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$df$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=df,y=vm] {../programming/c++/zeta_transform/src/fztlin_mem1};
+\addplot table[x=df,y=rss] {../programming/c++/zeta_transform/src/fztlin_mem1};
+\end{axis}
+\end{tikzpicture}
+
+A very shallow linear increase is seen in memory usage for the FZT as we increase the size of the set family $\mathcal{F}$.
+
+\subsection*{Test 2}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$n$,
+ylabel=time (ms)]
+\addplot table[x=n,y=time] {../programming/c++/zeta_transform/src/fztlin_time2};
+\addplot table[x=n,y=systime] {../programming/c++/zeta_transform/src/fztlin_time2};
+\end{axis}
+\end{tikzpicture}
+
+The amount of system time used is too low to be measured, but we see the expected exponential increase in user time as we increase $n$.
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$n$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=n,y=vm] {../programming/c++/zeta_transform/src/fztlin_mem2};
+\addplot table[x=n,y=rss] {../programming/c++/zeta_transform/src/fztlin_mem2};
+\end{axis}
+\end{tikzpicture}
+
+We have a quite clear exponential increae in memory usage as we keep $|\mathcal{F}|$ constant and increase $n$, which was slightly unexpected.
+
+\subsection*{Test 3}
+Test 3 does not apply for the FZT.
 
 \subsection{$k$-cover}
 
+\subsection*{Test 1}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$df$,
+ylabel=time (ms)]
+\addplot table[x=df,y=time] {../programming/c++/zeta_transform/src/k_cover_time1};
+\addplot table[x=df,y=systime] {../programming/c++/zeta_transform/src/k_cover_time1};
+\end{axis}
+\end{tikzpicture}
+
+Time measurements were too imprecise to provide any useful information.
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$df$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=df,y=vm] {../programming/c++/zeta_transform/src/k_cover_mem1};
+\addplot table[x=df,y=rss] {../programming/c++/zeta_transform/src/k_cover_mem1};
+\end{axis}
+\end{tikzpicture}
+
+Memory usage increases in a linear fashion for increasing set family size.
+
+\subsection*{Test 2}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$n$,
+ylabel=time (ms)]
+\addplot table[x=n,y=time] {../programming/c++/zeta_transform/src/k_cover_time2};
+\addplot table[x=n,y=systime] {../programming/c++/zeta_transform/src/k_cover_time2};
+\end{axis}
+\end{tikzpicture}
+
+System time measurements are too imprecise, but user time measurements provide the expected exponential increase.
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$n$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=n,y=vm] {../programming/c++/zeta_transform/src/k_cover_mem2};
+\addplot table[x=n,y=rss] {../programming/c++/zeta_transform/src/k_cover_mem2};
+\end{axis}
+\end{tikzpicture}
+
+Exponential curves in memory usage even when keeping the set family size constant.
+
+\subsection*{Test 3}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$k$,
+ylabel=time (ms)]
+\addplot table[x=k,y=time] {../programming/c++/zeta_transform/src/k_cover_time3};
+\addplot table[x=k,y=systime] {../programming/c++/zeta_transform/src/k_cover_time3};
+\end{axis}
+\end{tikzpicture}
+
+We do see that $k$ does influence time usage, but it doesn't seem to be a very influential parameter. System time is still too small to be measured.
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$k$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=k,y=vm] {../programming/c++/zeta_transform/src/k_cover_mem3};
+\addplot table[x=k,y=rss] {../programming/c++/zeta_transform/src/k_cover_mem3};
+\end{axis}
+\end{tikzpicture}
+
+On the memory side of things, $k$ does seem to be an influential parameter, which is to be expected. This is of course mainly in the memory needed for the terms in the output sum.
+
 \subsection{$k$-partition}
+
+\subsection*{Test 1}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$df$,
+ylabel=time (ms)]
+\addplot table[x=df,y=time] {../programming/c++/zeta_transform/src/k_partition_time1};
+\addplot table[x=df,y=systime] {../programming/c++/zeta_transform/src/k_partition_time1};
+\end{axis}
+\end{tikzpicture}
+
+Moving over to arithmetics with polynomials has a huge impact time usage. We can still not measure system time, but user time can now be measured in whole seconds. The increase is however very small, and indicates a logarithmic increase in time.
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$df$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=df,y=vm] {../programming/c++/zeta_transform/src/k_partition_mem1};
+\addplot table[x=df,y=rss] {../programming/c++/zeta_transform/src/k_partition_mem1};
+\end{axis}
+\end{tikzpicture}
+
+Except for some odd points, this is a very straight linear increase in memory usage.
+
+\subsection*{Test 2}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$n$,
+ylabel=time (ms)]
+\addplot table[x=n,y=time] {../programming/c++/zeta_transform/src/k_partition_time2};
+\addplot table[x=n,y=systime] {../programming/c++/zeta_transform/src/k_partition_time2};
+\end{axis}
+\end{tikzpicture}
+
+Time usage is still exponential, but polynomial arithmetics take much more time. The large tests are measured in whole minutes.
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$n$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=n,y=vm] {../programming/c++/zeta_transform/src/k_partition_mem2};
+\addplot table[x=n,y=rss] {../programming/c++/zeta_transform/src/k_partition_mem2};
+\end{axis}
+\end{tikzpicture}
+
+With memory increase being very rapid and with a large base, we see that resident set size and virtual memory usage are asymptotic to eachother. It's still clear that memory usage increases exponentially with increasing $n$.
+
+\subsection*{Test 3}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$k$,
+ylabel=time (ms)]
+\addplot table[x=k,y=time] {../programming/c++/zeta_transform/src/k_partition_time3};
+\addplot table[x=k,y=systime] {../programming/c++/zeta_transform/src/k_partition_time3};
+\end{axis}
+\end{tikzpicture}
+
+Now our tests take measureable amounts of time, and a clear linear increase is seen as we increase $k$. For the polynomials, $k$ does seem to be an influential parameter.
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$k$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=k,y=vm] {../programming/c++/zeta_transform/src/k_partition_mem3};
+\addplot table[x=k,y=rss] {../programming/c++/zeta_transform/src/k_partition_mem3};
+\end{axis}
+\end{tikzpicture}
+
+Interestingly enough, the impact of polynomials is that we have traded time for memory; this graph shows us memory is constant through increasing $k$, but we did pay with linear time increase.
 
 \subsection{$k$-packing}
 
+\subsection*{Test 1}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$df$,
+ylabel=time (ms)]
+\addplot table[x=df,y=time] {../programming/c++/zeta_transform/src/k_packing_time1};
+\addplot table[x=df,y=systime] {../programming/c++/zeta_transform/src/k_packing_time1};
+\end{axis}
+\end{tikzpicture}
+
+Test results are nearly exactly the same as for $k$-partition, only with a constant factor more expensive for $k$-cover. This is expected due to the algorithms design.
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$df$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=df,y=vm] {../programming/c++/zeta_transform/src/k_packing_mem1};
+\addplot table[x=df,y=rss] {../programming/c++/zeta_transform/src/k_packing_mem1};
+\end{axis}
+\end{tikzpicture}
+
+An even straighter linear increase in memory usage than for $k$-partition.
+
+\subsection*{Test 2}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$n$,
+ylabel=time (ms)]
+\addplot table[x=n,y=time] {../programming/c++/zeta_transform/src/k_packing_time2};
+\addplot table[x=n,y=systime] {../programming/c++/zeta_transform/src/k_packing_time2};
+\end{axis}
+\end{tikzpicture}
+
+More time used than for any other test, but with the same asymptotic complexity as all others.
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$n$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=n,y=vm] {../programming/c++/zeta_transform/src/k_packing_mem2};
+\addplot table[x=n,y=rss] {../programming/c++/zeta_transform/src/k_packing_mem2};
+\end{axis}
+\end{tikzpicture}
+
+Very similar results as for $k$-partition.
+
+\subsection*{Test 3}
+
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$k$,
+ylabel=time (ms)]
+\addplot table[x=k,y=time] {../programming/c++/zeta_transform/src/k_packing_time3};
+\addplot table[x=k,y=systime] {../programming/c++/zeta_transform/src/k_packing_time3};
+\end{axis}
+\end{tikzpicture}
+
+Polynomials give us linear increase in time \ldots
+\\\\
+\begin{tikzpicture}
+\begin{axis}[
+xlabel=$k$,
+ylabel=resident set / virtual memory (MB)]
+\addplot table[x=k,y=vm] {../programming/c++/zeta_transform/src/k_packing_mem3};
+\addplot table[x=k,y=rss] {../programming/c++/zeta_transform/src/k_packing_mem3};
+\end{axis}
+\end{tikzpicture}
+
+\ldots in exchange for constant memory.
+
 \section{Conclusions}
+Test 1 indicates to us that time dependence on the size of the set family $\mathcal{F}$ is $O(\log |\mathcal{F}|)$ \emph{when we use polynomials} and memory usage is $O(|\mathcal{F}|)$ for both polynomials and integers, both of which are interesting pieces of information. Further testing will have to deduce whether $k$-cover also provides a logarithmic increase in time as $df$ increases, as current tests executed too fast for our measurement precision.
+
+Test 2 shows us nothing unexpected when it comes to time usage, but the memory usage measurements indicates that we have an exponential increase even though we keep $|\mathcal{F}|$ constant. This may be expected for the $k$-problems, as increasing $n$ does mean our sums grow due to the number of terms increasing. But the same patterns presents itself even for just running the FZT, despite the claim in \cite{cov_pack} that the FZT increases as $O^*(|\mathcal{F}|)$, which is constant in test 2. Further discussion and simulations will have to investigate why.
+
+Test 3 shows a very interesting phenomenon connected to polynomial usage: memory usage is asymptotically less than for arithmetics with integers! Again, time is nearly unmeasurable when we use integers, but we do see that there is an increase, perhaps linear. For polynomials, we see a clear linear increase in time, which indicates that for larger instances of problems, choosing to work with polynomials may well be better than integers, as we do need increasing space, and get the same asymptotic increase in time.
+
+\section{Code}
+Here is presented the implementation of the Fast Zeta Transform. It is of course the same for all four programs, with only two alterations: \code{r\_val} is a polynomial or an integer, depending on problem, and the summation in the inner-most loop is unique for all problems.
+
+\begin{verbatim}
+void utils::fast_zeta_transform_linear_space(
+		int_t n1,
+		int_t n2,
+		int_list_t* family,
+		rval_list_t* f,
+		int_t k,
+		rval_t* pk)
+{
+
+	// Variables we only want to calculate once
+	int_t two_to_the_n1 = pow(2, n1);		// 2^n1
+	int_t two_to_the_n2 = pow(2, n2);		// 2^n2
+
+	int_t u1 = two_to_the_n1 - 1;			// Index of U1 in the range of subsets 2^U
+	int_t u2 = pow(2, n1+n2) - two_to_the_n1;	// Index of U2
+
+	// Function g
+	rval_list_t g(two_to_the_n2);
+
+	// {{ For each subset X1 of U1, do }}
+	for (int_t x1 = 0; x1 < two_to_the_n1; ++x1) {
+		// x1 is index of X1, but we do not handle X1 explicitly.
+
+		// {{ For each Y2 in U2, set g(Y2) <- 0 }}
+		for (int_t i = 0; i < two_to_the_n2; ++i) {
+			g[i].set_degree(n1 + n2);	// We just initialize a 0-vector of size 2^n2.
+					// I see no need to map these values to specific
+					// indices, but instead we make sure we
+					// access the proper value when using g.
+		}
+
+		// {{ For each Y in F, if YnU1 is a subset of X1, then set g(YnU2) <- g(YnU2) + f(Y) }}
+		for (int_t i = 0; i < family->size; ++i) {
+			int_t y = (*family)[i];
+
+			// {{ if YnU1 is a subset of X1 }}
+			// with index math: since u1 is all-ones for elements in U1,
+			// y & u1 will be the index of the set YnU1.
+			// y & u1 is the index of a subset of X1 iff
+			// y & u1 doesn't contain a 1 in any position where X1
+			// doesn't contain a 1. 
+			// If y & u1 does contain a 1 in a position where X1
+			// doesn't, (y & u1) | x1 will be a larger number than x1.
+			if (((y & u1) | x1) <= x1) {
+				
+				// Since g contains all subsets of U2 in increasing
+				// order of index, but indices of subsets of U2 doesn't
+				// (generally) come at a distance of 1 from eachother, 
+				// they come at a distance of 2^n1 (=1 iff n1=0). Since
+				// g doesn't contain "holes", we normalize the distances
+				// to 1 like this.
+				
+				g[(y & u2) / two_to_the_n1] += (*f)[i];
+			}
+		}
+		
+		// I don't need another vector, so I re-use g as h.
+		// {{ Compute h <- gS using fast zeta transform on 2^U2 }}
+		fast_zeta_transform_exp_space(n2, &g);
+
+		// The vector g contains all subsets of U2, in increasing
+		// order of index. But the indices of subsets of U2 doesn't come at
+		// a distance of 1 from eachother, unlike with U1. They are separarated 
+		// by 2^n1 positions.
+		// {{ For each subset X2 of U2, output h(X2) as the value fS(X1uX2) }}
+		
+		for (int_t i = 0; i < two_to_the_n2; ++i) {
+			int_t x2 = i * two_to_the_n1;
+			int_t x = x1 | x2;
+
+			// This is were we sum
+			// Below is the summation code for k-packing
+			
+			// Calculating k-packing
+
+			int_t size_of_X = count_1bits(x);
+
+			g[i].raise_to_the(k);
+			Polynomial p;
+			p.set_degree(n1 + n2);
+			mpz_set_ui(p[0], 1);
+			mpz_set_ui(p[1], 1);		// p = 1 + z
+			p.raise_to_the(size_of_X);
+			p *= power_of_minus_one(n1 + n2 - size_of_X);
+			g[i] *= p;
+			(*pk) += g[i];
+		}
+	}
+}
+\end{verbatim}
+
 
 \begin{thebibliography}{9}
 \bibitem{cov_pack} \url{http://fileadmin.cs.lth.se/cs/Personal/Thore_Husfeldt/papers/lsfzt.pdf}
