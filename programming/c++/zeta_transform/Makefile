@@ -1,20 +1,4 @@
 
-# le debug options
-DEBUG = false
-
-# le flags >_<
-CXX		= g++
-CC		= g++
-
-LDLIBS		+= -lgmpxx -lgmp	# For GMP links
-
-ifeq ($(DEBUG), true)
-CPPFLAGS += -ggdb
-LDFLAGS += -ggdb
-else
-CPPFLAGS += -O3
-endif
-
 # Paths
 HOME		= ./
 VPATH		= $(HOME)src/
@@ -22,35 +6,12 @@ BIN		= $(HOME)bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-OBJS		= *.o
-DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
+PRGS		= Parser.class
 
 # default targets
-.PHONY: all install clean
+.PHONY: all install
 
-firsttarget: install clean
+Parser.class:	$(VPATH)Parser.java
+	javac -d $(BIN) $(VPATH)Parser.java
 
-all: $(PRGS)
 
-install: all
-	mv $(PRGS) bin
-
-clean:
-	$(RM) $(OBJS)
-
-cleaner: clean
-	$(RM) $(VPATH)*.d
-
-cleanest: cleaner
-	$(RM) $(VPATH)*~ $(HOME)*~
-
-# Linking
-
-include $(DFILES)
-
-# Dependencies
-%.d: %.cc
-	@set -e; rm -f $@; \
-	$(CC) -MM $(CXXFLAGS) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
