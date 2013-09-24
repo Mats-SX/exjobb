@@ -8,7 +8,6 @@ class Polynomial {
 	friend std::ostream& operator<<(std::ostream&, const Polynomial&);
 	public:
 	Polynomial();
-	//Polynomial(const int);
 	~Polynomial();
 	void operator+=(const Polynomial&);
 
