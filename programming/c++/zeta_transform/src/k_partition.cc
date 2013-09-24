@@ -2,7 +2,6 @@
 #include <fstream>
 #include <cstdlib>
 #include <math.h>
-#include "polynomial.h"
 #include "utils.h"
 #include "types.h"
 #include <signal.h>

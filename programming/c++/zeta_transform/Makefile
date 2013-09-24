@@ -48,6 +48,10 @@ cleanest: cleaner
 # Linking
 k_partition: k_partition.o utils.o polynomial.o types.o
 
+# polynomials
+polynomial.o: ../polynomial/polynomial.cc ../polynomial/polynomial.h
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+
 include $(DFILES)
 
 # Dependencies
