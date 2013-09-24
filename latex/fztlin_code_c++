@@ -1,0 +1,100 @@
+void utils::fast_zeta_transform_linear_space(
+		int_t n1,
+		int_t n2,
+		int_list_t* family,
+		rval_list_t* f,
+		int_t k,
+		rval_t* pk)
+{
+
+	// Variables we only want to calculate once
+	int_t two_to_the_n1 = pow(2, n1);		// 2^n1
+	int_t two_to_the_n2 = pow(2, n2);		// 2^n2
+
+	// Index of U1 in the range of subsets 2^U
+	int_t u1 = two_to_the_n1 - 1;
+	// Index of U2
+	int_t u2 = pow(2, n1+n2) - two_to_the_n1;
+
+	// Function g
+	rval_list_t g(two_to_the_n2);
+
+	// {{ For each subset X1 of U1, do }}
+	for (int_t x1 = 0; x1 < two_to_the_n1; ++x1) {
+		// x1 is index of X1, but we do not handle X1 explicitly.
+
+		// {{ For each Y2 in U2, set g(Y2) <- 0 }}
+		for (int_t i = 0; i < two_to_the_n2; ++i) {
+			// We just initialize a 0-vector of size 2^n2.
+			// I see no need to map these values to specific
+			// indices, but instead we make sure we
+			// access the proper value when using g.
+			
+			// set polynomial to degree n
+			g[i].set_degree(n1 + n2);
+		}
+
+		// {{ For each Y in F, if YnU1 is a subset of X1, 
+		// then set g(YnU2) <- g(YnU2) + f(Y) }}
+		for (int_t i = 0; i < family->size; ++i) {
+			int_t y = (*family)[i];
+
+			// {{ if YnU1 is a subset of X1 }}
+			// with index math: since u1 is all-ones for elements in U1,
+			// y & u1 will be the index of the set YnU1.
+			// y & u1 is the index of a subset of X1 iff
+			// y & u1 doesn't contain a 1 in any position where X1
+			// doesn't contain a 1. 
+			// If y & u1 does contain a 1 in a position where X1
+			// doesn't, (y & u1) | x1 will be a larger number than x1.
+			if (((y & u1) | x1) <= x1) {
+				
+				// Since g contains all subsets of U2 in increasing
+				// order of index, but indices of subsets of U2 doesn't
+				// (generally) come at a distance of 1 from eachother, 
+				// they come at a distance of 2^n1 (=1 iff n1=0). Since
+				// g doesn't contain "holes", we normalize the distances
+				// to 1 like this.
+				
+				g[(y & u2) / two_to_the_n1] += (*f)[i];
+			}
+		}
+		
+		// I don't need another vector, so I re-use g as h.
+		// {{ Compute h <- gS using fast zeta transform on 2^U2 }}
+		fast_zeta_transform_exp_space(n2, &g);
+
+		// The vector g contains all subsets of U2, in increasing
+		// order of index. But the indices of subsets of U2 doesn't 
+		// come at a distance of 1 from eachother, unlike with U1. 
+		// They are separarated by 2^n1 positions.
+		// {{ For each subset X2 of U2, output h(X2) as the value fS(X1uX2) }}
+		
+		for (int_t i = 0; i < two_to_the_n2; ++i) {
+			int_t x2 = i * two_to_the_n1;
+			int_t x = x1 | x2;
+
+			############################################
+			## To the LateX reader
+			## 
+			## This is where we sum
+			## Below is the summation code for k-packing
+			##
+			############################################
+			
+			// Calculating k-packing
+
+			int_t size_of_X = count_1bits(x);
+
+			g[i].raise_to_the(k);
+			Polynomial p;
+			p.set_degree(n1 + n2);
+			mpz_set_ui(p[0], 1);
+			mpz_set_ui(p[1], 1);		// p = 1 + z
+			p.raise_to_the(size_of_X);
+			p *= power_of_minus_one(n1 + n2 - size_of_X);
+			g[i] *= p;
+			(*pk) += g[i];
+		}
+	}
+}
