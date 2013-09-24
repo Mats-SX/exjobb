@@ -1,7 +1,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include "polynomial.h"
+#include "../../polynomial/polynomial.h"
 
 typedef int int_t;
 typedef Polynomial rval_t;
