@@ -38,6 +38,24 @@ int_t neighbours_of(int_t set, bool* matrix, int_t n) {
 }
 
 /*
+ * This function returns a pointer to the first element of a smallest-first ordered
+ * list of vertex numbers present in the set set. 
+ */
+void vertices_in(int_t set, int_t* list) {
+	int_t vertex = 0;
+	int_t i = 0;
+	while (set) {		// as long as set != emptyset
+		if (set % 2) {	// set has 1 in last pos, vertex is in set
+			list[i] = vertex;
+			++i;
+		}
+		set = set >> 1;	// set next element as last
+		++vertex;	// proceed to next vertex
+	}
+//	return list;
+}
+
+/*
  * The integer set contains a 1 on position i iff vertex i is in the set X.
  * This function returns true iff there is no vertex in G \ X with a neighbour in X.
  */
@@ -148,7 +166,10 @@ int main(int argc, char** argv) {
 		// {{ b) For each subset Y1 of X1, 
 		// set h(V2 \ N(Y1)) <- h(V2 \ N(Y1)) + z^(|Y1|) if Y1 independent in G }}
 		for (int_t y1 = 0; y1 <= x1; ++y1) {
-			// TODO: Fix this loop so it executes in time O*(2^|X1|) instead of ...?
+			// TODO: Fix this loop so it executes in time 2^|X1| instead of 2^c
+			// where c is the position of the most significant bit of x1, or, in 
+			// set terms, the highest-numbered vertex present in X1.
+
 
 			if ((y1 | x1) <= x1) { // <=> Y1 is subset of X1
 				// if Y1 is independent in G
