@@ -5,12 +5,13 @@ DEBUG = true
 # le flags >_<
 CXX		= g++
 CC		= g++
+CXXFLAGS 	+= -Wall -Wextra -pedantic-errors -Wold-style-cast
 
 ifeq ($(DEBUG), true)
 CPPFLAGS += -ggdb
 LDFLAGS += -ggdb
 else
-CPPFLAGS += -O2
+CPPFLAGS += -O3
 endif
 
 # Paths
@@ -19,9 +20,11 @@ VPATH		= $(HOME)/src/
 BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
+LDLIBS		+= -lgmpxx -lgmp	# For GMP links
+
 # Programs
 PRGS		= chromatic_polynomial 
-OBJS		= chromatic_polynomail.o
+OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
 # default targets
@@ -37,14 +40,14 @@ install: all
 clean:
 	$(RM) $(OBJS)
 
-cleaner: clean
-	$(RM) $(DFILES)
-
-cleanest: cleaner
-	$(RM) $(BIN)*
+cleanest: 
+	$(RM) $(DFILES) 
 
 # Linking
-chromatic_polynomial: chromatic_polynomial.o ../zeta_transform/src/utils.o
+chromatic_polynomial: chromatic_polynomial.o utils.o polynomial.o
+
+polynomial.o: ../polynomial/polynomial.cc ../polynomial/polynomial.h
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 include $(DFILES)
 
