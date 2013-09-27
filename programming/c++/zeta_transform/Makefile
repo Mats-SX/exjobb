@@ -22,7 +22,7 @@ BIN		= $(HOME)bin/
 #TEMP		= $(HOME)/temp/
 
 # Programs
-PRGS		= instance_creator
+PRGS		= instance_creator matrix_creator
 OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 
