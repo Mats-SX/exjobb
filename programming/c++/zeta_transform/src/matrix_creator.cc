@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
 		}
 
 		unsigned long int dist_size = distribution.size(); 
-		cout << "dist size: " << dist_size << endl;
+//		cout << "dist size: " << dist_size << endl;
 		
 		// Shuffle the distribution using Fisher–Yates shuffle
 		for (unsigned long int i = dist_size - 1; i > 0; --i) {
@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
 			}
 		}
 
-		cout << "dist size: " << distribution.size() << endl;
+//		cout << "dist size: " << distribution.size() << endl;
 		
 		ostringstream outname;
 		outname << "../instances/adj_matrices/";

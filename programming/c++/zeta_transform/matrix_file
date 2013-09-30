@@ -9,10 +9,17 @@
 # Each row <n> <dm> specifies a (random) graph to be generated with
 # n vertices and dm density of edges. 
 # n > 0 is an integer, 0 <= dm <= 100 is an integer.
-9
+16
 18 25
+18 50
+18 75
+18 100
 19 25
+19 50
+19 75
+19 100
 20 25
+20 50
 21 25
 22 25
 23 25
