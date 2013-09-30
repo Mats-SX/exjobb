@@ -6,6 +6,7 @@ DEBUG = true
 CXX		= g++
 CC		= g++
 CXXFLAGS 	+= -Wall -Wextra -pedantic-errors -Wold-style-cast
+CPPFLAGS	+= -m64
 
 ifeq ($(DEBUG), true)
 CPPFLAGS += -ggdb
@@ -20,10 +21,11 @@ VPATH		= $(HOME)/src/
 BIN		= $(HOME)/bin/
 #TEMP		= $(HOME)/temp/
 
+LDLIBS		+= -lntl		# For NTL links
 LDLIBS		+= -lgmpxx -lgmp	# For GMP links
 
 # Programs
-PRGS		= chromatic_polynomial 
+PRGS		= chromatic_polynomial ntltest 
 OBJS		= *.o
 DFILES		= $(addprefix $(VPATH), $(addsuffix .d, $(PRGS)))
 

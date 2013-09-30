@@ -26,7 +26,7 @@ int_t neighbours_of(int_t set, bool* matrix, int_t n) {
 		++vertex;	// proceed to next vertex
 	}
 	int_t neighbours = 0;
-	for (int_t i = 0; i < vertices.size(); ++i) {
+	for (unsigned int i = 0; i < vertices.size(); ++i) {
 		for (int_t j = 0; j < n; ++j) {
 			if (matrix[n * vertices[i] + j]) {
 				neighbours |= 1 << j;	// 1 in pos j
@@ -75,8 +75,8 @@ bool independent(int_t set, bool* matrix, int_t n) {
 		set = set >> 1;	// set next element as last
 		++vertex;	// proceed to next vertex
 	}
-	for (int_t i = 0; i < vertices.size(); ++i) {
-		for (int_t j = i + 1; j < vertices.size(); ++j) {
+	for (unsigned int i = 0; i < vertices.size(); ++i) {
+		for (unsigned int j = i + 1; j < vertices.size(); ++j) {
 			if (matrix[n * vertices[i] + vertices[j]]) {
 				//DEBUG
 //				std::cout << "found connection. not independent" << std::endl;
@@ -142,7 +142,7 @@ int main(int argc, char** argv) {
 
 	// 1.
 	rval_t r;
-	r.set_degree(n);
+//	r.set_degree(n);
 
 	// {{ 2. For each subset X1 of V1, do }}
 	for (int_t x1 = 0; x1 <= v1; ++x1) {
@@ -155,13 +155,13 @@ int main(int argc, char** argv) {
 		rval_list_t l(two_to_the_n2);
 		
 		// {{ a) For each subset Z2 of V2, set h(Z2) <- 0 }}
-		for (int i = 0; i < two_to_the_n2; ++i) {
-			h[i].set_degree(n);
+//		for (int i = 0; i < two_to_the_n2; ++i) {
+//			h[i].set_degree(n);
 			// We just initialize a 0-vector of size 2^n2.
 			// I see no need to map these values to specific
 			// indices, but instead we make sure we
 			// access the proper value when using g.
-		}
+//		}
 
 		// {{ b) For each subset Y1 of X1, 
 		// set h(V2 \ N(Y1)) <- h(V2 \ N(Y1)) + z^(|Y1|) if Y1 independent in G }}
@@ -182,10 +182,10 @@ int main(int argc, char** argv) {
 //					std::cout << "y1 was deemed independent" << std::endl;
 
 
-					Polynomial p;
-					p.set_degree(n);
 					int_t size_of_y1 = utils::count_1bits(y1);
-					mpz_set_ui(p[size_of_y1], 1);		// p = 1z^(|y1|)
+					rval_t p(size_of_y1, 1);
+//					p.set_degree(n);
+//					mpz_set_ui(p[size_of_y1], 1);		// p = 1z^(|y1|)
 
 					//DEBUG:
 //					int neigh = neighbours_of(y1, matrix, n);
@@ -208,15 +208,16 @@ int main(int argc, char** argv) {
 		for (int_t i = 0; i < two_to_the_n2; ++i) {
 			int_t y2 = i * two_to_the_n1;
 
-			l[i].set_degree(n);
+//			l[i].set_degree(n);
 			
 			// DEBUG
 //			std::cout << "y2: " << y2 << "=" << std::bitset<3>(y2) << std::endl;
 			
 			if (independent(y2, matrix, n)) {
-				l[i].set_degree(n);
+//				l[i].set_degree(n);
 				int_t size_of_y2 = utils::count_1bits(y2);
-				mpz_set_ui(l[i][size_of_y2], 1);	// p = 1z^(|y2|)
+//				mpz_set_ui(l[i][size_of_y2], 1);	// p = 1z^(|y2|)
+				SetCoeff(l[i], size_of_y2);
 			}
 
 			//DEBUG
@@ -245,8 +246,11 @@ int main(int argc, char** argv) {
 
 			int_t x2 = i * two_to_the_n1;
 			int exponent = n - utils::count_1bits(x1) - utils::count_1bits(x2);
-			int factor = utils::power_of_minus_one(exponent);			
-			h[i].raise_to_the(k);
+			int factor = utils::power_of_minus_one(exponent);
+			rval_t cpy(h[i]);
+			for (int p = 0; p < k - 1; ++p)
+				mul(h[i], h[i], cpy);
+//			h[i].raise_to_the(k);
 			h[i] *= factor;
 			r += h[i];
 

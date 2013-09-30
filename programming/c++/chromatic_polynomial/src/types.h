@@ -2,9 +2,10 @@
 #define TYPES_H
 
 #include "../../polynomial/polynomial.h"
+#include <NTL/ZZX.h>
 
 typedef int int_t;
-typedef Polynomial rval_t;
+typedef NTL::ZZX rval_t;
 
 template <class T>
 class PointerList {
